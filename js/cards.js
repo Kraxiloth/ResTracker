@@ -1,16 +1,16 @@
 // =============================================================================
-// CARD LOOKUP - SORCERY API
+// CARD LOOKUP - LOCAL DATA
 // =============================================================================
 
 let allCards = [];
 let searchTimeout = null;
 
-// Load all cards from API
+// Load all cards from local JSON
 async function loadCards() {
     try {
-        const response = await fetch('https://api.sorcerytcg.com/api/cards');
-        const data = await response.json();
-        allCards = data.cards || [];
+        const response = await fetch('data/cards.json');
+        allCards = await response.json();
+        console.log(`Loaded ${allCards.length} cards`);
     } catch (error) {
         console.error('Failed to load cards:', error);
     }
@@ -46,40 +46,75 @@ function searchCards() {
         }
         
         resultsContainer.innerHTML = matches.map(card => `
-            <div class="avatar-list-item" onclick="showCardDetail('${card.slug}')">
+            <div class="avatar-list-item" onclick='showCardDetail(${JSON.stringify(card.name)})'>
                 ${card.name}
             </div>
         `).join('');
     }, 300); // Debounce search
 }
 
-function showCardDetail(slug) {
-    const card = allCards.find(c => c.slug === slug);
+function showCardDetail(cardName) {
+    const card = allCards.find(c => c.name === cardName);
     if (!card) return;
     
     // Hide results, show detail
     document.getElementById('card-results').style.display = 'none';
     document.getElementById('card-detail').style.display = 'flex';
     
+    // Get the most recent set's metadata (usually the best data)
+    const recentSet = card.sets && card.sets.length > 0 ? card.sets[card.sets.length - 1] : null;
+    const metadata = recentSet ? recentSet.metadata : card.guardian;
+    
+    // Get card image from most recent variant
+    let imageUrl = 'bet-sorcerer-b-s.webp'; // Fallback to default avatar
+    if (recentSet && recentSet.variants && recentSet.variants.length > 0) {
+        const variant = recentSet.variants[0];
+        imageUrl = `https://d27a44hjr9gen3.cloudfront.net/${variant.slug}.png`;
+    }
+    
     // Set card image
     const cardImage = document.getElementById('card-detail-image');
-    cardImage.src = `https://d27a44hjr9gen3.cloudfront.net/bet/sorcery_logo_black.png`; // Placeholder
+    cardImage.src = imageUrl;
     cardImage.alt = card.name;
-    
-    // Try to load actual card image
-    if (card.image_uris && card.image_uris.front) {
-        cardImage.src = card.image_uris.front;
-    }
     
     // Set card text
     const textContainer = document.getElementById('card-detail-text');
     let cardText = `<h4>${card.name}</h4>`;
-    if (card.type_line) cardText += `<p><strong>Type:</strong> ${card.type_line}</p>`;
-    if (card.oracle_text) cardText += `<p>${card.oracle_text}</p>`;
-    if (card.flavor_text) cardText += `<p><em>${card.flavor_text}</em></p>`;
+    
+    if (metadata) {
+        if (metadata.type) cardText += `<p><strong>Type:</strong> ${metadata.type}`;
+        if (card.subTypes) cardText += ` — ${card.subTypes}`;
+        cardText += `</p>`;
+        
+        if (metadata.cost !== null && metadata.cost !== undefined) {
+            cardText += `<p><strong>Cost:</strong> ${metadata.cost}`;
+            if (metadata.thresholds) {
+                const thresholds = [];
+                if (metadata.thresholds.air > 0) thresholds.push(`${metadata.thresholds.air} Air`);
+                if (metadata.thresholds.fire > 0) thresholds.push(`${metadata.thresholds.fire} Fire`);
+                if (metadata.thresholds.earth > 0) thresholds.push(`${metadata.thresholds.earth} Earth`);
+                if (metadata.thresholds.water > 0) thresholds.push(`${metadata.thresholds.water} Water`);
+                if (thresholds.length > 0) cardText += ` (${thresholds.join(', ')})`;
+            }
+            cardText += `</p>`;
+        }
+        
+        if (metadata.attack !== null && metadata.attack !== undefined) {
+            cardText += `<p><strong>Power/Defense:</strong> ${metadata.attack}/${metadata.defence}</p>`;
+        }
+        
+        if (metadata.rulesText) {
+            cardText += `<p>${metadata.rulesText.replace(/\n/g, '<br>')}</p>`;
+        }
+        
+        if (recentSet && recentSet.variants && recentSet.variants[0].flavorText) {
+            cardText += `<p><em>${recentSet.variants[0].flavorText}</em></p>`;
+        }
+    }
+    
     textContainer.innerHTML = cardText;
     
-    // Set FAQ if available
+    // FAQ section - check if curiosa.io has FAQ data
     const faqContainer = document.getElementById('card-detail-faq');
     if (card.faqs && card.faqs.length > 0) {
         faqContainer.innerHTML = '<h4>FAQ</h4>' + card.faqs.map(faq => `
@@ -89,13 +124,11 @@ function showCardDetail(slug) {
             </div>
         `).join('');
     } else {
-        faqContainer.innerHTML = '';
+        faqContainer.innerHTML = '<p><em>No FAQ entries for this card yet.</em></p>';
     }
 }
 
 function backToCardList() {
     document.getElementById('card-results').style.display = 'flex';
     document.getElementById('card-detail').style.display = 'none';
-    document.getElementById('card-search').value = '';
-    searchCards();
 }
