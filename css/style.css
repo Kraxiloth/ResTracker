@@ -215,6 +215,31 @@ body {
     font-family: 'Courier New', monospace;
 }
 
+.timer-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.timer-control {
+    background-color: var(--bg-button);
+    color: var(--text-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.timer-control:hover {
+    background-color: var(--bg-button-hover);
+}
+
 .timer-expired {
     color: var(--color-timer-expired);
     font-weight: bold;
