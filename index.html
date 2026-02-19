@@ -1,6 +1,170 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <h1>Sorcery</h1>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorcery Life Counter</title>
+    <link rel="stylesheet" href="css/style.css?v=1.1.1">
+</head>
+<body>
+
+    <!-- Player panels -->
+    <div class="container" id="container"></div>
+
+    <!-- Global controls -->
+    <div class="global-buttons">
+        <button class="settings-btn" onclick="openSettings()">&#9881;&#65039;</button>
+        <button class="settings-btn" onclick="openDice()">&#127922;</button>
+        <button class="new-turn-btn" onclick="newTurn()">New Turn</button>
+        <button class="reset-btn" onclick="resetGame()">Reset</button>
+    </div>
+
+    <!-- Settings modal -->
+    <div class="modal-overlay" id="settings-overlay" onclick="closeSettings()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeSettings()">&#10005;</button>
+            <h3 class="browser-title">Settings</h3>
+            
+            <div class="settings-row">
+                <label>Number of Players</label>
+                <select id="player-count" onchange="handlePlayerCount()">
+                    <option value="1">1 Player</option>
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4">4 Players</option>
+                    <option value="5">5 Players</option>
+                    <option value="6">6 Players</option>
+                </select>
+            </div>
+            
+            <div class="settings-row">
+                <label>Remove Player</label>
+                <select id="remove-player" onchange="handleRemovePlayer()">
+                    <option value="">Select player</option>
+                </select>
+            </div>
+            
+            <div class="settings-row">
+                <label>Timer Mode</label>
+                <select id="timer-mode" onchange="handleTimerModeChange()">
+                    <option value="elapsed">Elapsed Time</option>
+                    <option value="countdown">Countdown</option>
+                </select>
+            </div>
+            
+            <div class="settings-row">
+                <label>Timer Scope</label>
+                <select id="timer-scope" onchange="handleTimerScopeChange()">
+                    <option value="global">Global Timer</option>
+                    <option value="per-player">Per-Player Timer</option>
+                </select>
+            </div>
+            
+            <div class="settings-row">
+                <label>Countdown Duration (minutes)</label>
+                <input type="number" id="timer-duration" value="60" min="1" max="999" onchange="handleTimerDurationChange()">
+            </div>
+        </div>
+    </div>
+
+    <!-- Avatar card modal -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&#10005;</button>
+
+            <div id="modal-view-card">
+                <img class="modal-image" id="modal-image" src="" alt="Avatar">
+                <button class="modal-change" onclick="openAvatarBrowser()">Change Avatar</button>
+            </div>
+
+            <div id="modal-avatar-browser" style="display:none" onclick="event.stopPropagation()">
+                <h3 class="browser-title">Select Avatar</h3>
+                <div class="browser-controls">
+                    <input type="text" id="avatar-search" placeholder="Search avatars..."
+                        oninput="handleSearchInput()" onclick="event.stopPropagation()">
+                    <label class="finish-toggle">
+                        <input type="checkbox" id="show-all-finishes" onchange="filterAvatars()">
+                        Show all finishes
+                    </label>
+                </div>
+                <div id="avatar-list" class="avatar-list">
+                    <div class="browser-loading">Loading avatars...</div>
+                </div>
+                <div id="avatar-preview" class="avatar-preview" style="display:none">
+                    <img id="preview-image" src="" alt="Preview">
+                    <button class="modal-change" onclick="confirmAvatar()">Select This Avatar</button>
+                    <button class="modal-cancel" onclick="backToList()">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dice roller modal -->
+    <div class="modal-overlay" id="dice-overlay" onclick="closeDice()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeDice()">&#10005;</button>
+            <h3 class="browser-title">Dice Roller</h3>
+            <div class="dice-controls">
+                <div class="dice-row">
+                    <span class="dice-label">D6</span>
+                    <button class="dice-count-btn" onclick="adjustDiceCount('d6', -1)">&minus;</button>
+                    <span class="dice-count" id="count-d6">0</span>
+                    <button class="dice-count-btn" onclick="adjustDiceCount('d6', 1)">+</button>
+                </div>
+                <div class="dice-row">
+                    <span class="dice-label">D12</span>
+                    <button class="dice-count-btn" onclick="adjustDiceCount('d12', -1)">&minus;</button>
+                    <span class="dice-count" id="count-d12">0</span>
+                    <button class="dice-count-btn" onclick="adjustDiceCount('d12', 1)">+</button>
+                </div>
+                <div class="dice-row">
+                    <span class="dice-label">D20</span>
+                    <button class="dice-count-btn" onclick="adjustDiceCount('d20', -1)">&minus;</button>
+                    <span class="dice-count" id="count-d20">0</span>
+                    <button class="dice-count-btn" onclick="adjustDiceCount('d20', 1)">+</button>
+                </div>
+            </div>
+            <button class="new-turn-btn" id="roll-btn" onclick="rollDice()">Roll</button>
+            <div id="dice-results" class="dice-results" style="display:none">
+                <div id="dice-results-content"></div>
+                <div class="dice-grand-total" id="dice-grand-total"></div>
+                <button class="new-turn-btn" onclick="rollDice()">Roll Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts loaded in dependency order -->
+    <script src="js/players.js?v=1.1.1"></script>
+    <script src="js/game.js?v=1.1.1"></script>
+    <script src="js/timer.js?v=1.1.1"></script>
+    <script src="js/avatars.js?v=1.1.1"></script>
+    <script src="js/dice.js?v=1.1.1"></script>
+    <script src="js/ui.js?v=1.1.1"></script>
+
+    <script>
+        // Initialise the app
+        const stateLoaded = loadGameState();
+        renderPlayers();
+        updateRemoveDropdown();
+
+        // Restore avatar images after rendering
+        if (stateLoaded) {
+            players.forEach((player, index) => {
+                if (player.avatar) {
+                    const avatarCard = document.getElementById(`avatar${index + 1}`);
+                    let img = avatarCard.querySelector('img');
+                    if (!img) {
+                        img = document.createElement('img');
+                        img.onerror = function() { this.style.display = 'none'; };
+                        avatarCard.appendChild(img);
+                    }
+                    img.style.display = '';
+                    img.src = `${IMAGE_BASE_URL}${player.avatar}.png`;
+                }
+            });
+        }
+        // Timer is now only started manually via play button
+    </script>
+
+</body>
 </html>
