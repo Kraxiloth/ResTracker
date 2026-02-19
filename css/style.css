@@ -614,10 +614,13 @@ body {
 
 .codex-definition {
     padding: var(--space-lg);
+    padding-bottom: var(--space-xl);
     border-top: 1px solid var(--border-color);
     color: var(--text-secondary);
     line-height: 1.5;
     display: none;
+    max-height: 50vh;
+    overflow-y: auto;
 }
 
 .codex-entry.expanded .codex-definition {
@@ -684,6 +687,61 @@ body {
 .card-faq-answer {
     color: var(--text-secondary);
     line-height: 1.5;
+}
+
+
+/* =============================================================================
+   MODAL - ABOUT
+   ============================================================================= */
+
+.about-content {
+    max-width: 500px;
+}
+
+.about-section {
+    width: 100%;
+    padding: var(--space-lg);
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-md);
+}
+
+.about-section h4 {
+    margin: 0 0 var(--space-md) 0;
+    color: var(--text-primary);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.about-section p {
+    margin: var(--space-sm) 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.about-section a {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+.about-motto {
+    font-style: italic;
+    text-align: center;
+    color: var(--text-primary) !important;
+    font-size: 18px;
+}
+
+.about-contact {
+    font-size: 14px;
+    color: var(--text-tertiary) !important;
+}
+
+.about-version {
+    font-size: 12px;
+    color: var(--text-tertiary) !important;
+    margin-top: var(--space-lg) !important;
+    text-align: center;
 }
 
 

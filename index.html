@@ -39,6 +39,11 @@
                 <span class="menu-icon">&#128269;</span>
                 <span class="menu-label">Card Lookup</span>
             </button>
+            
+            <button class="menu-option" onclick="openAbout()">
+                <span class="menu-icon">&#9432;</span>
+                <span class="menu-label">About</span>
+            </button>
         </div>
     </div>
 
@@ -127,6 +132,43 @@
                 <div id="card-detail-text"></div>
                 <div id="card-detail-faq"></div>
                 <button class="modal-cancel" onclick="backToCardList()">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About modal -->
+    <div class="modal-overlay" id="about-overlay" onclick="closeAbout()">
+        <div class="modal-content about-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeAbout()">&#10005;</button>
+            <h3 class="browser-title">About</h3>
+            
+            <div class="about-section">
+                <h4>Sorcery Life Counter</h4>
+                <p>A comprehensive life tracking and reference tool for Sorcery: Contested Realm.</p>
+                <p class="about-motto"><em>"Opponents, not enemies :)"</em></p>
+            </div>
+            
+            <div class="about-section">
+                <h4>Created By</h4>
+                <p><a href="https://github.com/Kraxiloth" target="_blank" rel="noopener">Kraxiloth</a></p>
+                <p class="about-contact">Contact: Discord @kraxiloth</p>
+            </div>
+            
+            <div class="about-section">
+                <h4>Contributors</h4>
+                <p>Special thanks to the <strong>Kanoncon</strong> community for invaluable feedback and testing.</p>
+                <p><strong>Nossy</strong> — Design & Testing</p>
+            </div>
+            
+            <div class="about-section">
+                <h4>Development</h4>
+                <p>Built through AI-assisted pair programming with <strong>Claude</strong> (Anthropic). This project demonstrates the potential of collaborative human-AI development.</p>
+            </div>
+            
+            <div class="about-section">
+                <h4>Open Source</h4>
+                <p><a href="https://github.com/Kraxiloth/sorcery" target="_blank" rel="noopener">View on GitHub</a></p>
+                <p class="about-version">Version 1.0.4</p>
             </div>
         </div>
     </div>

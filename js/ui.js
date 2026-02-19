@@ -50,6 +50,19 @@ function closeCardLookup() {
 }
 
 // =============================================================================
+// UI - ABOUT MODAL
+// =============================================================================
+
+function openAbout() {
+    closeMenu();
+    document.getElementById('about-overlay').classList.add('active');
+}
+
+function closeAbout() {
+    document.getElementById('about-overlay').classList.remove('active');
+}
+
+// =============================================================================
 // SCREEN WAKE LOCK
 // =============================================================================
 

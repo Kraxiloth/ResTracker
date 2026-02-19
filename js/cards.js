@@ -65,17 +65,8 @@ function showCardDetail(cardName) {
     const recentSet = card.sets && card.sets.length > 0 ? card.sets[card.sets.length - 1] : null;
     const metadata = recentSet ? recentSet.metadata : card.guardian;
     
-    // Get card image from most recent variant
-    let imageUrl = 'bet-sorcerer-b-s.webp'; // Fallback to default avatar
-    if (recentSet && recentSet.variants && recentSet.variants.length > 0) {
-        const variant = recentSet.variants[0];
-        imageUrl = `https://d27a44hjr9gen3.cloudfront.net/${variant.slug}.png`;
-    }
-    
-    // Set card image
-    const cardImage = document.getElementById('card-detail-image');
-    cardImage.src = imageUrl;
-    cardImage.alt = card.name;
+    // Hide card image entirely
+    document.getElementById('card-detail-image').style.display = 'none';
     
     // Set card text
     const textContainer = document.getElementById('card-detail-text');
@@ -114,18 +105,17 @@ function showCardDetail(cardName) {
     
     textContainer.innerHTML = cardText;
     
-    // FAQ section - check if curiosa.io has FAQ data
+    // FAQ section - link to curiosa.io since FAQ data isn't in the API
     const faqContainer = document.getElementById('card-detail-faq');
-    if (card.faqs && card.faqs.length > 0) {
-        faqContainer.innerHTML = '<h4>FAQ</h4>' + card.faqs.map(faq => `
-            <div class="card-faq-item">
-                <div class="card-faq-question">${faq.question}</div>
-                <div class="card-faq-answer">${faq.answer}</div>
-            </div>
-        `).join('');
-    } else {
-        faqContainer.innerHTML = '<p><em>No FAQ entries for this card yet.</em></p>';
-    }
+    const cardSlug = card.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    faqContainer.innerHTML = `
+        <p style="text-align: center; margin-top: var(--space-lg);">
+            <a href="https://curiosa.io/cards/${cardSlug}" target="_blank" rel="noopener" 
+               style="color: var(--text-primary); text-decoration: underline;">
+                View FAQ on Curiosa.io →
+            </a>
+        </p>
+    `;
 }
 
 function backToCardList() {

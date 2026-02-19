@@ -43,7 +43,8 @@ function searchCodex() {
                 ${entry.keyword}
             </div>
             <div class="codex-definition">
-                ${entry.definition}
+                ${entry.full_text || entry.definition}
+                <div style="height: 20px;"></div>
             </div>
         </div>
     `).join('');
@@ -52,4 +53,10 @@ function searchCodex() {
 function toggleCodexEntry(index) {
     const entry = document.getElementById(`codex-entry-${index}`);
     entry.classList.toggle('expanded');
+}
+
+function getCodexUrl(keyword) {
+    // Convert keyword to URL-friendly slug
+    const slug = keyword.toLowerCase().replace(/\s+/g, '_');
+    return `https://curiosa.io/codex?search=${encodeURIComponent(keyword)}`;
 }
