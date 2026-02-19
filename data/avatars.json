@@ -1,0 +1,793 @@
+[
+  {
+    "name": "Avatar of Air",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_air-pd-s",
+    "finish": "Standard",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Air",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_air-b-f",
+    "finish": "Foil",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Air",
+    "set": "Promotional",
+    "slug": "pro-avatar_of_air-op-rf",
+    "finish": "Rainbow",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Earth",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_earth-pd-s",
+    "finish": "Standard",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Earth",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_earth-b-f",
+    "finish": "Foil",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Earth",
+    "set": "Promotional",
+    "slug": "pro-avatar_of_earth-op-rf",
+    "finish": "Rainbow",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Fire",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_fire-pd-s",
+    "finish": "Standard",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Fire",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_fire-b-f",
+    "finish": "Foil",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Fire",
+    "set": "Promotional",
+    "slug": "pro-avatar_of_fire-op-rf",
+    "finish": "Rainbow",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Water",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_water-pd-s",
+    "finish": "Standard",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Water",
+    "set": "Alpha",
+    "slug": "alp-avatar_of_water-b-f",
+    "finish": "Foil",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Avatar of Water",
+    "set": "Promotional",
+    "slug": "pro-avatar_of_water-op-rf",
+    "finish": "Rainbow",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Battlemage",
+    "set": "Alpha",
+    "slug": "alp-battlemage-b-s",
+    "finish": "Standard",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Battlemage",
+    "set": "Alpha",
+    "slug": "alp-battlemage-b-f",
+    "finish": "Foil",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Battlemage",
+    "set": "Beta",
+    "slug": "bet-battlemage-b-s",
+    "finish": "Standard",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Battlemage",
+    "set": "Beta",
+    "slug": "bet-battlemage-b-f",
+    "finish": "Foil",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Battlemage",
+    "set": "Promotional",
+    "slug": "pro-battlemage-op-rf",
+    "finish": "Rainbow",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Deathspeaker",
+    "set": "Alpha",
+    "slug": "alp-deathspeaker-b-s",
+    "finish": "Standard",
+    "artist": "Tony Szczudlo"
+  },
+  {
+    "name": "Deathspeaker",
+    "set": "Alpha",
+    "slug": "alp-deathspeaker-b-f",
+    "finish": "Foil",
+    "artist": "Tony Szczudlo"
+  },
+  {
+    "name": "Deathspeaker",
+    "set": "Beta",
+    "slug": "bet-deathspeaker-b-s",
+    "finish": "Standard",
+    "artist": "Tony Szczudlo"
+  },
+  {
+    "name": "Deathspeaker",
+    "set": "Beta",
+    "slug": "bet-deathspeaker-b-f",
+    "finish": "Foil",
+    "artist": "Tony Szczudlo"
+  },
+  {
+    "name": "Deathspeaker",
+    "set": "Promotional",
+    "slug": "pro-deathspeaker-op-rf",
+    "finish": "Rainbow",
+    "artist": "Tony Szczudlo"
+  },
+  {
+    "name": "Elementalist",
+    "set": "Alpha",
+    "slug": "alp-elementalist-b-s",
+    "finish": "Standard",
+    "artist": "Elvira Shakirova"
+  },
+  {
+    "name": "Elementalist",
+    "set": "Alpha",
+    "slug": "alp-elementalist-b-f",
+    "finish": "Foil",
+    "artist": "Elvira Shakirova"
+  },
+  {
+    "name": "Elementalist",
+    "set": "Beta",
+    "slug": "bet-elementalist-b-s",
+    "finish": "Standard",
+    "artist": "Elvira Shakirova"
+  },
+  {
+    "name": "Elementalist",
+    "set": "Beta",
+    "slug": "bet-elementalist-b-f",
+    "finish": "Foil",
+    "artist": "Elvira Shakirova"
+  },
+  {
+    "name": "Elementalist",
+    "set": "Promotional",
+    "slug": "pro-elementalist-op-rf",
+    "finish": "Rainbow",
+    "artist": "Elvira Shakirova"
+  },
+  {
+    "name": "Enchantress",
+    "set": "Alpha",
+    "slug": "alp-enchantress-b-s",
+    "finish": "Standard",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Enchantress",
+    "set": "Alpha",
+    "slug": "alp-enchantress-b-f",
+    "finish": "Foil",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Enchantress",
+    "set": "Beta",
+    "slug": "bet-enchantress-b-s",
+    "finish": "Standard",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Enchantress",
+    "set": "Beta",
+    "slug": "bet-enchantress-b-f",
+    "finish": "Foil",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Enchantress",
+    "set": "Promotional",
+    "slug": "pro-enchantress-op-rf",
+    "finish": "Rainbow",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Pathfinder",
+    "set": "Alpha",
+    "slug": "alp-pathfinder-b-s",
+    "finish": "Standard",
+    "artist": "Drew Tucker"
+  },
+  {
+    "name": "Pathfinder",
+    "set": "Alpha",
+    "slug": "alp-pathfinder-b-f",
+    "finish": "Foil",
+    "artist": "Drew Tucker"
+  },
+  {
+    "name": "Pathfinder",
+    "set": "Beta",
+    "slug": "bet-pathfinder-b-s",
+    "finish": "Standard",
+    "artist": "Drew Tucker"
+  },
+  {
+    "name": "Pathfinder",
+    "set": "Beta",
+    "slug": "bet-pathfinder-b-f",
+    "finish": "Foil",
+    "artist": "Drew Tucker"
+  },
+  {
+    "name": "Pathfinder",
+    "set": "Promotional",
+    "slug": "pro-pathfinder-op-rf",
+    "finish": "Rainbow",
+    "artist": "Drew Tucker"
+  },
+  {
+    "name": "Seer",
+    "set": "Alpha",
+    "slug": "alp-seer-b-s",
+    "finish": "Standard",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Seer",
+    "set": "Alpha",
+    "slug": "alp-seer-b-f",
+    "finish": "Foil",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Seer",
+    "set": "Beta",
+    "slug": "bet-seer-b-s",
+    "finish": "Standard",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Seer",
+    "set": "Beta",
+    "slug": "bet-seer-b-f",
+    "finish": "Foil",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Seer",
+    "set": "Promotional",
+    "slug": "pro-seer-op-rf",
+    "finish": "Rainbow",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Alpha",
+    "slug": "alp-sorcerer-b-s",
+    "finish": "Standard",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Alpha",
+    "slug": "alp-sorcerer-b-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Alpha",
+    "slug": "alp-sorcerer-bt-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Beta",
+    "slug": "bet-sorcerer-b-s",
+    "finish": "Standard",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Beta",
+    "slug": "bet-sorcerer-b-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Beta",
+    "slug": "bet-sorcerer-bt-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Promotional",
+    "slug": "pro-sorcerer-k-s",
+    "finish": "Standard",
+    "artist": "Alan Pollack"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Promotional",
+    "slug": "pro-sorcerer-d-f",
+    "finish": "Foil",
+    "artist": "Alan Pollack"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Promotional",
+    "slug": "pro-sorcerer-op-f",
+    "finish": "Foil",
+    "artist": "Frank Frazetta"
+  },
+  {
+    "name": "Sorcerer",
+    "set": "Promotional",
+    "slug": "pro-sorcerer-op-rf",
+    "finish": "Rainbow",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sparkmage",
+    "set": "Beta",
+    "slug": "bet-sparkmage-b-s",
+    "finish": "Standard",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sparkmage",
+    "set": "Beta",
+    "slug": "bet-sparkmage-b-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Sparkmage",
+    "set": "Promotional",
+    "slug": "pro-sparkmage-op-rf",
+    "finish": "Rainbow",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Geomancer",
+    "set": "Beta",
+    "slug": "bet-geomancer-b-s",
+    "finish": "Standard",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Geomancer",
+    "set": "Beta",
+    "slug": "bet-geomancer-b-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Geomancer",
+    "set": "Promotional",
+    "slug": "pro-geomancer-op-rf",
+    "finish": "Rainbow",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Flamecaller",
+    "set": "Beta",
+    "slug": "bet-flamecaller-b-s",
+    "finish": "Standard",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Flamecaller",
+    "set": "Beta",
+    "slug": "bet-flamecaller-b-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Flamecaller",
+    "set": "Promotional",
+    "slug": "pro-flamecaller-op-rf",
+    "finish": "Rainbow",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Waveshaper",
+    "set": "Beta",
+    "slug": "bet-waveshaper-b-s",
+    "finish": "Standard",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Waveshaper",
+    "set": "Beta",
+    "slug": "bet-waveshaper-b-f",
+    "finish": "Foil",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Waveshaper",
+    "set": "Promotional",
+    "slug": "pro-waveshaper-op-rf",
+    "finish": "Rainbow",
+    "artist": "Francesca Baerald"
+  },
+  {
+    "name": "Spellslinger",
+    "set": "Promotional",
+    "slug": "pro-spellslinger-dk-s",
+    "finish": "Standard",
+    "artist": "Caio Calazans"
+  },
+  {
+    "name": "Spellslinger",
+    "set": "Promotional",
+    "slug": "pro-spellslinger-op-f",
+    "finish": "Foil",
+    "artist": "Caio Calazans"
+  },
+  {
+    "name": "Spellslinger",
+    "set": "Promotional",
+    "slug": "pro-spellslinger-op-rf",
+    "finish": "Rainbow",
+    "artist": "Caio Calazans"
+  },
+  {
+    "name": "Archimago",
+    "set": "Arthurian Legends",
+    "slug": "art-archimago-b-s",
+    "finish": "Standard",
+    "artist": "Rodney Matthews"
+  },
+  {
+    "name": "Archimago",
+    "set": "Arthurian Legends",
+    "slug": "art-archimago-b-f",
+    "finish": "Foil",
+    "artist": "Rodney Matthews"
+  },
+  {
+    "name": "Archimago",
+    "set": "Promotional",
+    "slug": "pro-archimago-op-rf",
+    "finish": "Rainbow",
+    "artist": "Rodney Matthews"
+  },
+  {
+    "name": "Druid",
+    "set": "Arthurian Legends",
+    "slug": "art-druid-bt-s",
+    "finish": "Standard",
+    "artist": "Bryon Wackwitz"
+  },
+  {
+    "name": "Druid",
+    "set": "Promotional",
+    "slug": "pro-druid-d-f",
+    "finish": "Foil",
+    "artist": "Bryon Wackwitz"
+  },
+  {
+    "name": "Druid",
+    "set": "Promotional",
+    "slug": "pro-druid-op-rf",
+    "finish": "Rainbow",
+    "artist": "Bryon Wackwitz"
+  },
+  {
+    "name": "Templar",
+    "set": "Arthurian Legends",
+    "slug": "art-templar-bt-s",
+    "finish": "Standard",
+    "artist": "Andrea Modesti"
+  },
+  {
+    "name": "Templar",
+    "set": "Arthurian Legends",
+    "slug": "art-templar-b-f",
+    "finish": "Foil",
+    "artist": "Andrea Modesti"
+  },
+  {
+    "name": "Templar",
+    "set": "Promotional",
+    "slug": "pro-templar-op-rf",
+    "finish": "Rainbow",
+    "artist": "Andrea Modesti"
+  },
+  {
+    "name": "Witch",
+    "set": "Arthurian Legends",
+    "slug": "art-witch-b-s",
+    "finish": "Standard",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Witch",
+    "set": "Arthurian Legends",
+    "slug": "art-witch-b-f",
+    "finish": "Foil",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Witch",
+    "set": "Promotional",
+    "slug": "pro-witch-ai-f",
+    "finish": "Foil",
+    "artist": "Frank Frazetta"
+  },
+  {
+    "name": "Witch",
+    "set": "Promotional",
+    "slug": "pro-witch-op-rf",
+    "finish": "Rainbow",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Dragonlord",
+    "set": "Dragonlord",
+    "slug": "dra-dragonlord-b-s",
+    "finish": "Standard",
+    "artist": "Ed Beard Jr."
+  },
+  {
+    "name": "Dragonlord",
+    "set": "Dragonlord",
+    "slug": "dra-dragonlord-b-f",
+    "finish": "Foil",
+    "artist": "Ed Beard Jr."
+  },
+  {
+    "name": "Dragonlord",
+    "set": "Promotional",
+    "slug": "pro-dragonlord-op-rf",
+    "finish": "Rainbow",
+    "artist": "Ed Beard Jr."
+  },
+  {
+    "name": "Animist",
+    "set": "Gothic",
+    "slug": "got-animist-b-s",
+    "finish": "Standard",
+    "artist": "Margaret Organ-Kean"
+  },
+  {
+    "name": "Animist",
+    "set": "Gothic",
+    "slug": "got-animist-b-f",
+    "finish": "Foil",
+    "artist": "Margaret Organ-Kean"
+  },
+  {
+    "name": "Bladedancer",
+    "set": "Gothic",
+    "slug": "got-bladedancer-b-s",
+    "finish": "Standard",
+    "artist": "Brian Smith"
+  },
+  {
+    "name": "Bladedancer",
+    "set": "Gothic",
+    "slug": "got-bladedancer-b-f",
+    "finish": "Foil",
+    "artist": "Brian Smith"
+  },
+  {
+    "name": "Corruptor",
+    "set": "Gothic",
+    "slug": "got-corruptor-b-s",
+    "finish": "Standard",
+    "artist": "Heidi Taillefer"
+  },
+  {
+    "name": "Corruptor",
+    "set": "Gothic",
+    "slug": "got-corruptor-b-f",
+    "finish": "Foil",
+    "artist": "Heidi Taillefer"
+  },
+  {
+    "name": "Duplicator",
+    "set": "Gothic",
+    "slug": "got-duplicator-b-s",
+    "finish": "Standard",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Duplicator",
+    "set": "Gothic",
+    "slug": "got-duplicator-b-f",
+    "finish": "Foil",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Harbinger",
+    "set": "Gothic",
+    "slug": "got-harbinger-b-s",
+    "finish": "Standard",
+    "artist": "Doug Kovacs"
+  },
+  {
+    "name": "Harbinger",
+    "set": "Gothic",
+    "slug": "got-harbinger-pd-s",
+    "finish": "Standard",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Harbinger",
+    "set": "Gothic",
+    "slug": "got-harbinger-b-f",
+    "finish": "Foil",
+    "artist": "Doug Kovacs"
+  },
+  {
+    "name": "Imposter",
+    "set": "Gothic",
+    "slug": "got-imposter-b-s",
+    "finish": "Standard",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Imposter",
+    "set": "Gothic",
+    "slug": "got-imposter-b-f",
+    "finish": "Foil",
+    "artist": "S\u00e9verine Pineaux"
+  },
+  {
+    "name": "Interrogator",
+    "set": "Gothic",
+    "slug": "got-interrogator-b-s",
+    "finish": "Standard",
+    "artist": "Anson Maddocks"
+  },
+  {
+    "name": "Interrogator",
+    "set": "Gothic",
+    "slug": "got-interrogator-b-f",
+    "finish": "Foil",
+    "artist": "Anson Maddocks"
+  },
+  {
+    "name": "Ironclad",
+    "set": "Gothic",
+    "slug": "got-ironclad-b-s",
+    "finish": "Standard",
+    "artist": "Elwira Pawlikowska"
+  },
+  {
+    "name": "Ironclad",
+    "set": "Gothic",
+    "slug": "got-ironclad-b-f",
+    "finish": "Foil",
+    "artist": "Elwira Pawlikowska"
+  },
+  {
+    "name": "Magician",
+    "set": "Gothic",
+    "slug": "got-magician-b-s",
+    "finish": "Standard",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Magician",
+    "set": "Gothic",
+    "slug": "got-magician-b-f",
+    "finish": "Foil",
+    "artist": "Jussi Pylk\u00e4s"
+  },
+  {
+    "name": "Necromancer",
+    "set": "Gothic",
+    "slug": "got-necromancer-b-s",
+    "finish": "Standard",
+    "artist": "Brian Smith"
+  },
+  {
+    "name": "Necromancer",
+    "set": "Gothic",
+    "slug": "got-necromancer-pd-s",
+    "finish": "Standard",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Necromancer",
+    "set": "Gothic",
+    "slug": "got-necromancer-b-f",
+    "finish": "Foil",
+    "artist": "Brian Smith"
+  },
+  {
+    "name": "Persecutor",
+    "set": "Gothic",
+    "slug": "got-persecutor-b-s",
+    "finish": "Standard",
+    "artist": "Zohn Dee"
+  },
+  {
+    "name": "Persecutor",
+    "set": "Gothic",
+    "slug": "got-persecutor-pd-s",
+    "finish": "Standard",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Persecutor",
+    "set": "Gothic",
+    "slug": "got-persecutor-b-f",
+    "finish": "Foil",
+    "artist": "Zohn Dee"
+  },
+  {
+    "name": "Realm-Eater",
+    "set": "Gothic",
+    "slug": "got-realm_eater-b-s",
+    "finish": "Standard",
+    "artist": "Zohn Dee"
+  },
+  {
+    "name": "Realm-Eater",
+    "set": "Gothic",
+    "slug": "got-realm_eater-b-f",
+    "finish": "Foil",
+    "artist": "Zohn Dee"
+  },
+  {
+    "name": "Savior",
+    "set": "Gothic",
+    "slug": "got-savior-b-s",
+    "finish": "Standard",
+    "artist": "Elwira Pawlikowska"
+  },
+  {
+    "name": "Savior",
+    "set": "Gothic",
+    "slug": "got-savior-pd-s",
+    "finish": "Standard",
+    "artist": "Dan Seagrave"
+  },
+  {
+    "name": "Savior",
+    "set": "Gothic",
+    "slug": "got-savior-b-f",
+    "finish": "Foil",
+    "artist": "Elwira Pawlikowska"
+  }
+]
