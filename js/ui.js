@@ -76,6 +76,7 @@ async function requestWakeLock() {
             
             wakeLock.addEventListener('release', () => {
                 console.log('Wake lock released');
+                wakeLock = null; // Reset so it can be re-requested
             });
         }
     } catch (err) {
