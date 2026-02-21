@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorcery Life Counter</title>
-    <link rel="stylesheet" href="css/style.css?v=1.0.4">
+    <link rel="stylesheet" href="css/style.css?v=1.0.5">
 </head>
 <body>
 
@@ -207,44 +207,38 @@
 
     <!-- Dice roller modal -->
     <div class="modal-overlay" id="dice-overlay" onclick="closeDice()">
-        <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-content dice-modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeDice()">&#10005;</button>
-            <h3 class="browser-title">Dice Roller</h3>
-            <div class="dice-controls">
-                <div class="dice-row">
-                    <span class="dice-label">D6</span>
-                    <button class="dice-count-btn" onclick="adjustDiceCount('d6', -1)">&minus;</button>
-                    <span class="dice-count" id="count-d6">0</span>
-                    <button class="dice-count-btn" onclick="adjustDiceCount('d6', 1)">+</button>
-                </div>
-                <div class="dice-row">
-                    <span class="dice-label">D12</span>
-                    <button class="dice-count-btn" onclick="adjustDiceCount('d12', -1)">&minus;</button>
-                    <span class="dice-count" id="count-d12">0</span>
-                    <button class="dice-count-btn" onclick="adjustDiceCount('d12', 1)">+</button>
-                </div>
-                <div class="dice-row">
-                    <span class="dice-label">D20</span>
-                    <button class="dice-count-btn" onclick="adjustDiceCount('d20', -1)">&minus;</button>
-                    <span class="dice-count" id="count-d20">0</span>
-                    <button class="dice-count-btn" onclick="adjustDiceCount('d20', 1)">+</button>
-                </div>
+            <h3 class="browser-title">Roll Dice</h3>
+            
+            <!-- Dice selection -->
+            <div id="dice-selection" class="dice-selection">
+                <button class="dice-button d6-button" onclick="rollD6()">
+                    <div class="dice-icon">⚅</div>
+                    <div class="dice-label">D6</div>
+                </button>
+                <button class="dice-button d20-button" onclick="rollD20()">
+                    <div class="dice-icon">🎲</div>
+                    <div class="dice-label">D20</div>
+                </button>
             </div>
-            <button class="new-turn-btn" id="roll-btn" onclick="rollDice()">Roll</button>
-            <div id="dice-results" class="dice-results" style="display:none">
-                <div id="dice-results-content"></div>
-                <div class="dice-grand-total" id="dice-grand-total"></div>
-                <button class="new-turn-btn" onclick="rollDice()">Roll Again</button>
+            
+            <!-- Dice Display -->
+            <div id="dice-display" class="dice-display-container" style="display:none">
+                <div id="dice-visual" class="dice-visual">
+                    <img id="dice-icon-img" class="dice-icon-img" src="" alt="Dice">
+                    <div id="dice-result-number" class="dice-result-number">1</div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts loaded in dependency order -->
-    <script src="js/players.js?v=1.0.4"></script>
-    <script src="js/game.js?v=1.0.4"></script>
-    <script src="js/timer.js?v=1.0.4"></script>
+    <script src="js/players.js?v=1.0.5"></script>
+    <script src="js/game.js?v=1.0.5"></script>
+    <script src="js/timer.js?v=1.0.5"></script>
     <script src="js/avatars.js?v=1.0.0"></script>
-    <script src="js/dice.js?v=1.0.0"></script>
+    <script src="js/dice.js?v=1.0.5"></script>
     <script src="js/codex.js?v=1.0.4"></script>
     <script src="js/cards.js?v=1.0.4"></script>
     <script src="js/ui.js?v=1.0.4"></script>
@@ -257,6 +251,14 @@
         
         if (stateLoaded) {
             restoreAvatarImages();
+        }
+        
+        // Initialize timer displays (handles both fresh and restored state)
+        initializeTimerDisplays();
+        
+        // If timer was running, start the interval
+        if (timerRunning) {
+            startTimer();
         }
     </script>
 

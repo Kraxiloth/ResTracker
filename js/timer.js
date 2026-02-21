@@ -1,7 +1,50 @@
 // =============================================================================
 // TIMER
 // =============================================================================
+
 let timerRunning = false;
+
+function initializeTimerDisplays() {
+    players.forEach((_, index) => {
+        const timerEl = document.getElementById(`timer${index + 1}`);
+        const timerBtn = document.getElementById(`timer-btn${index + 1}`);
+        if (!timerEl) return;
+        
+        // If there's already a saved timer state, update from that
+        if (globalTimerStart || (timerScope === 'per-player' && players[index].timerStart)) {
+            updateTimerDisplays();
+        } else {
+            // Fresh start - show default values
+            if (timerMode === 'countdown') {
+                timerEl.textContent = formatTime(timerDuration * 60);
+            } else {
+                timerEl.textContent = '0:00';
+            }
+        }
+        
+        // Set button state
+        if (timerBtn) {
+            timerBtn.textContent = timerRunning ? '⏸' : '▶';
+        }
+    });
+}
+
+function toggleTimer(playerIndex) {
+    if (timerRunning) {
+        stopTimer();
+        timerRunning = false;
+        document.querySelectorAll('.timer-control').forEach(btn => {
+            btn.textContent = '▶';
+        });
+    } else {
+        startTimer();
+        timerRunning = true;
+        document.querySelectorAll('.timer-control').forEach(btn => {
+            btn.textContent = '⏸';
+        });
+    }
+    saveGameState();
+}
 
 function startTimer() {
     const now = Date.now();
@@ -30,21 +73,6 @@ function stopTimer() {
         clearInterval(globalTimerInterval);
         globalTimerInterval = null;
     }
-}
-
-function toggleTimer(playerIndex) {
-    if (timerRunning) {
-        stopTimer();
-        document.querySelectorAll('.timer-control').forEach(btn => {
-            btn.textContent = '▶';
-        });
-    } else {
-        startTimer();
-        document.querySelectorAll('.timer-control').forEach(btn => {
-            btn.textContent = '⏸';
-        });
-    }
-    timerRunning = !timerRunning;
 }
 
 function updateTimerDisplays() {

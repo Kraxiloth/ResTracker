@@ -202,7 +202,8 @@ function saveGameState() {
         timerMode: timerMode,
         timerScope: timerScope,
         timerDuration: timerDuration,
-        globalTimerStart: globalTimerStart
+        globalTimerStart: globalTimerStart,
+        timerRunning: timerRunning
     };
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -221,6 +222,7 @@ function loadGameState() {
             timerScope = state.timerScope || 'global';
             timerDuration = state.timerDuration || 60;
             globalTimerStart = state.globalTimerStart;
+            timerRunning = state.timerRunning || false;
             
             // Update UI to match loaded state
             document.getElementById('player-count').value = players.length;
