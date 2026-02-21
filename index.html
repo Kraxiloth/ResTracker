@@ -55,7 +55,7 @@
             
             <div class="settings-row">
                 <label>Number of Players</label>
-                <select id="player-count" onchange="handlePlayerCount()">
+                <select id="player-count" disabled onchange="handlePlayerCount()">
                     <option value="1">1 Player</option>
                     <option value="2">2 Players</option>
                     <option value="3">3 Players</option>
@@ -67,7 +67,7 @@
             
             <div class="settings-row">
                 <label>Remove Player</label>
-                <select id="remove-player" onchange="handleRemovePlayer()">
+                <select id="remove-player" disabled onchange="handleRemovePlayer()">
                     <option value="">Select player</option>
                 </select>
             </div>
@@ -225,20 +225,24 @@
             
             <!-- Dice Display -->
             <div id="dice-display" class="dice-display-container" style="display:none">
-                <div id="dice-visual" class="dice-visual">
-                    <img id="dice-icon-img" class="dice-icon-img" src="" alt="Dice">
-                    <div id="dice-result-number" class="dice-result-number">1</div>
+                <div class="dice-3d-wrapper">
+                    <canvas id="dice-canvas" width="300" height="300"></canvas>
+                    <div id="dice-result-number" class="dice-result-overlay">1</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Three.js for 3D dice rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <!-- Scripts loaded in dependency order -->
+    <script src="js/dice-renderer.js?v=1.0.6"></script>
     <script src="js/players.js?v=1.0.5"></script>
     <script src="js/game.js?v=1.0.5"></script>
     <script src="js/timer.js?v=1.0.5"></script>
     <script src="js/avatars.js?v=1.0.0"></script>
-    <script src="js/dice.js?v=1.0.5"></script>
+    <script src="js/dice.js?v=1.0.6"></script>
     <script src="js/codex.js?v=1.0.4"></script>
     <script src="js/cards.js?v=1.0.4"></script>
     <script src="js/ui.js?v=1.0.4"></script>

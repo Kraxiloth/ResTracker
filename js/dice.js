@@ -1,20 +1,28 @@
 // =============================================================================
-// DICE ROLLER - ICON ROTATION
+// DICE ROLLER - THREE.JS INTEGRATION
 // =============================================================================
 
 let diceRolling = false;
-const ROLL_DURATION = 3000; // 3 seconds for cycling
-const RESULT_DISPLAY = 1500; // 1.5 seconds
+let diceRenderer = null;
+const RESULT_DISPLAY = 1500;
 
 function openDice() {
     document.getElementById('dice-overlay').classList.add('active');
-    // Reset to selection view
     document.getElementById('dice-selection').style.display = 'flex';
     document.getElementById('dice-display').style.display = 'none';
 }
 
 function closeDice() {
     document.getElementById('dice-overlay').classList.remove('active');
+    
+    // Reset rolling state immediately so user can roll again
+    diceRolling = false;
+    
+    if (diceRenderer) {
+        diceRenderer.animating = false; // Stop animation loop
+        diceRenderer.destroy();
+        diceRenderer = null;
+    }
 }
 
 function rollD6() {
@@ -23,39 +31,31 @@ function rollD6() {
     diceRolling = true;
     const result = Math.floor(Math.random() * 6) + 1;
     
-    // Hide selection, show dice display
+    // Hide selection, show 3D canvas
     document.getElementById('dice-selection').style.display = 'none';
     const display = document.getElementById('dice-display');
     display.style.display = 'flex';
     
-    const visual = document.getElementById('dice-visual');
-    const iconImg = document.getElementById('dice-icon-img');
+    const canvas = document.getElementById('dice-canvas');
     const resultNumber = document.getElementById('dice-result-number');
     
-    // Show die face, hide number
-    iconImg.style.display = 'block';
+    // Hide number overlay for D6 (has textures)
     resultNumber.style.display = 'none';
     
-    // Slower die face cycling (100ms intervals = less flashy)
-    let cycleCount = 0;
-    const totalCycles = ROLL_DURATION / 100;
-    const cycleInterval = setInterval(() => {
-        const randomFace = Math.floor(Math.random() * 6) + 1;
-        iconImg.src = `res/die${randomFace}.svg`;
-        cycleCount++;
-        if (cycleCount >= totalCycles) {
-            clearInterval(cycleInterval);
-            // Show final result
-            iconImg.src = `res/die${result}.svg`;
-            
-            // Auto-close after showing result
-            setTimeout(() => {
-                resultNumber.style.display = '';
-                diceRolling = false;
-                closeDice();
-            }, RESULT_DISPLAY);
-        }
-    }, 100); // Cycle every 100ms (slower, smoother)
+    // Initialize renderer
+    if (!diceRenderer) {
+        diceRenderer = new DiceRenderer(canvas);
+    }
+    
+    diceRenderer.clear();
+    diceRenderer.createD6();
+    diceRenderer.rollDice(result, true);
+    
+    // Shorter duration for D6 (2 seconds + 1 second display = 3 total)
+    setTimeout(() => {
+        diceRolling = false;
+        closeDice();
+    }, 3000);
 }
 
 function rollD20() {
@@ -64,41 +64,41 @@ function rollD20() {
     diceRolling = true;
     const result = Math.floor(Math.random() * 20) + 1;
     
-    // Hide selection, show dice display
+    // Hide selection, show 3D canvas
     document.getElementById('dice-selection').style.display = 'none';
     const display = document.getElementById('dice-display');
     display.style.display = 'flex';
     
-    const visual = document.getElementById('dice-visual');
-    const iconImg = document.getElementById('dice-icon-img');
+    const canvas = document.getElementById('dice-canvas');
     const resultNumber = document.getElementById('dice-result-number');
     
-    // Show D20 SVG icon (static, no rotation)
-    iconImg.src = 'res/d20.svg';
-    iconImg.style.display = 'block';
-    resultNumber.style.display = 'block';
-    resultNumber.style.fontSize = '48px'; // Further reduced for better fit
-    resultNumber.style.opacity = '1';
+    // Initialize renderer
+    if (!diceRenderer) {
+        diceRenderer = new DiceRenderer(canvas);
+    }
     
-    // Slower number cycling (100ms intervals = less flashy)
-    let cycleCount = 0;
-    const totalCycles = ROLL_DURATION / 100;
-    const cycleInterval = setInterval(() => {
-        resultNumber.textContent = Math.floor(Math.random() * 20) + 1;
-        cycleCount++;
-        if (cycleCount >= totalCycles) {
-            clearInterval(cycleInterval);
-            // Show final result
-            resultNumber.textContent = result;
-            
-            // Auto-close after showing result
+    diceRenderer.clear();
+    diceRenderer.createD20();
+    diceRenderer.rollDice(result, false);
+    
+    // Hide number during animation
+    resultNumber.style.display = 'none';
+    
+    // Show result number after animation completes (2 seconds)
+    setTimeout(() => {
+        resultNumber.style.display = 'block';
+        resultNumber.style.opacity = '1';
+        resultNumber.textContent = result;
+        resultNumber.classList.add('show');
+        
+        // Auto-close after displaying result (1.5 seconds)
+        setTimeout(() => {
+            resultNumber.classList.remove('show');
+            resultNumber.style.opacity = '';
             setTimeout(() => {
-                resultNumber.style.opacity = '';
-                resultNumber.style.fontSize = '';
-                resultNumber.style.display = '';
                 diceRolling = false;
                 closeDice();
-            }, RESULT_DISPLAY);
-        }
-    }, 100); // Cycle every 100ms (slower, smoother)
+            }, 300);
+        }, 1500);
+    }, 2000); // Wait for animation to finish
 }
