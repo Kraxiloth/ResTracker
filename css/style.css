@@ -276,7 +276,7 @@ body {
     width: 100%;
     aspect-ratio: 5 / 7;
     background-color: var(--bg-tertiary);
-    border-radius: var(--radius-sm);
+    border-radius: 3mm;
     display: flex;
     align-items: center;
     justify-content: center;
