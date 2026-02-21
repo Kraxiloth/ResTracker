@@ -67,6 +67,8 @@ function closeAbout() {
 // =============================================================================
 
 let wakeLock = null;
+let wakeLockTimeoutId = null;
+const WAKE_LOCK_TIMEOUT = 10 * 60 * 1000; // 10 minutes
 
 async function requestWakeLock() {
     try {
@@ -78,10 +80,38 @@ async function requestWakeLock() {
                 console.log('Wake lock released');
                 wakeLock = null; // Reset so it can be re-requested
             });
+            
+            // Start inactivity timeout
+            resetWakeLockTimeout();
         }
     } catch (err) {
         console.error('Wake lock failed:', err);
     }
+}
+
+function releaseWakeLock() {
+    if (wakeLock) {
+        wakeLock.release();
+        wakeLock = null;
+        console.log('Wake lock manually released');
+    }
+    if (wakeLockTimeoutId) {
+        clearTimeout(wakeLockTimeoutId);
+        wakeLockTimeoutId = null;
+    }
+}
+
+function resetWakeLockTimeout() {
+    // Clear existing timeout
+    if (wakeLockTimeoutId) {
+        clearTimeout(wakeLockTimeoutId);
+    }
+    
+    // Set new timeout to release wake lock after 10 minutes of inactivity
+    wakeLockTimeoutId = setTimeout(() => {
+        console.log('Wake lock released due to 10 minutes of inactivity');
+        releaseWakeLock();
+    }, WAKE_LOCK_TIMEOUT);
 }
 
 // Request wake lock when app loads
@@ -99,3 +129,8 @@ document.addEventListener('visibilitychange', () => {
         }
     }
 });
+
+// Reset timeout on any user activity
+document.addEventListener('click', resetWakeLockTimeout);
+document.addEventListener('touchstart', resetWakeLockTimeout);
+document.addEventListener('keydown', resetWakeLockTimeout);
