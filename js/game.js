@@ -15,7 +15,8 @@ function adjustMana(playerIndex, type, amount) {
         player.mana = Math.min(player.mana + amount, player.maxMana);
         player.mana = Math.max(0, player.mana);
     } else {
-        player.mana = Math.max(0, Math.min(player.maxMana, player.mana + amount));
+        // Allow current mana to go above maximum (temporary bonuses)
+        player.mana = Math.max(0, player.mana + amount);
     }
     updateDisplay(playerIndex);
 }
@@ -37,31 +38,11 @@ function resetGame() {
         players = players.map(player => createPlayer(player.name));
         players.forEach((_, index) => updateDisplay(index));
         
-        // Stop and reset timers
+        // Reset timers
         stopTimer();
-        timerRunning = false;
         globalTimerStart = null;
         players.forEach(player => player.timerStart = null);
-        
-        // Reset play button icons to play state
-        document.querySelectorAll('.timer-control').forEach(btn => {
-            btn.textContent = '▶';
-        });
-        
-        // Reset timer displays based on mode
-        players.forEach((_, index) => {
-            const timerEl = document.getElementById(`timer${index + 1}`);
-            if (timerEl) {
-                if (timerMode === 'countdown') {
-                    // Show countdown duration
-                    timerEl.textContent = formatTime(timerDuration * 60);
-                } else {
-                    // Show 0:00 for elapsed mode
-                    timerEl.textContent = '0:00';
-                }
-                timerEl.classList.remove('timer-expired');
-            }
-        });
+        startTimer();
         
         saveGameState();
     }

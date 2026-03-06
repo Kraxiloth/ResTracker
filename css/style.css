@@ -93,6 +93,15 @@ body {
     overflow: hidden;
 }
 
+/* Remove focus outline on buttons after click (prevents sticky state on mobile) */
+button:focus {
+    outline: none;
+}
+
+button:active {
+    outline: none;
+}
+
 
 /* =============================================================================
    GLOBAL BUTTONS
@@ -399,9 +408,10 @@ body {
     line-height: normal;
     margin: 0;
     min-width: var(--value-width);
-    width: var(--value-width);
+    width: auto; /* Allow to expand for double digits */
     text-align: center;
     flex-shrink: 0;
+    white-space: nowrap; /* Prevent wrapping */
 }
 
 
