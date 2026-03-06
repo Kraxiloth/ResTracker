@@ -134,3 +134,10 @@ document.addEventListener('visibilitychange', () => {
 document.addEventListener('click', resetWakeLockTimeout);
 document.addEventListener('touchstart', resetWakeLockTimeout);
 document.addEventListener('keydown', resetWakeLockTimeout);
+
+// Auto-blur buttons on click to prevent sticky focus state on mobile
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+        e.target.blur();
+    }
+});
