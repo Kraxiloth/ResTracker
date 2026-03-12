@@ -38,11 +38,20 @@ function resetGame() {
         players = players.map(player => createPlayer(player.name));
         players.forEach((_, index) => updateDisplay(index));
         
-        // Reset timers
+        // Reset timer state but keep it stopped
+        const wasRunning = timerRunning;
         stopTimer();
+        timerRunning = false;
         globalTimerStart = null;
         players.forEach(player => player.timerStart = null);
-        startTimer();
+        
+        // Update button state to show play (▶)
+        document.querySelectorAll('.timer-control').forEach(btn => {
+            btn.textContent = '▶';
+        });
+        
+        // Update timer displays to show initial state
+        initializeTimerDisplays();
         
         saveGameState();
     }
