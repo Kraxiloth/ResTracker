@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- ============================================================
+       PWA / MOBILE META TAGS
+       ============================================================ -->
+
+  <!-- Primary -->
+  <title>ResTracker</title>
+  <meta name="description" content="A companion app for Sorcery: Contested Realm" />
+  <meta name="theme-color" content="#c9a84c" />
+
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ResTracker" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+
+  <!-- Android / Chrome -->
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png" />
+
+  <!-- ============================================================
+       STYLES
+       base.css loaded first — provides CSS custom properties
+       before any content renders, preventing a flash of
+       unstyled / wrong-theme content.
+       ============================================================ -->
+  <link rel="stylesheet" href="styles/base.css" />
+
+  <!-- ============================================================
+       CONFIG
+       Must load before app.js so APP_CONFIG is available
+       when the bootstrapper runs.
+       ============================================================ -->
+  <script src="config.js"></script>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       APP SHELL
+       #app is the CSS grid container defined in base.css.
+       grid-template-areas: header | content | nav
+       ============================================================ -->
+  <div id="app">
+
+    <!-- ==================== HEADER ==================== -->
+    <header id="app-header" role="banner">
+      <span class="app-title">ResTracker</span>
+    </header>
+    <!-- End header -->
+
+
+    <!-- ==================== CONTENT ==================== -->
+    <main id="app-content" role="main">
+
+      <!-- --------------------------------------------------
+           VIEW: GAME
+           Life, mana and threshold counters.
+           Shown by default — first nav item.
+           -------------------------------------------------- -->
+      <section
+        id="view-game"
+        class="view"
+        role="tabpanel"
+        aria-label="Game"
+      >
+        <!-- Game feature module will populate this -->
+      </section>
+
+
+      <!-- --------------------------------------------------
+           VIEW: TOURNAMENT
+           Tournament and event tools.
+           -------------------------------------------------- -->
+      <section
+        id="view-tournament"
+        class="view"
+        role="tabpanel"
+        aria-label="Tournament"
+      >
+        <!-- Tournament feature module will populate this -->
+      </section>
+
+
+      <!-- --------------------------------------------------
+           VIEW: SETTINGS
+           Theme switcher and app preferences.
+           -------------------------------------------------- -->
+      <section
+        id="view-settings"
+        class="view"
+        role="tabpanel"
+        aria-label="Settings"
+      >
+        <!-- Settings feature module will populate this -->
+      </section>
+
+    </main>
+    <!-- End content -->
+
+
+    <!-- ==================== BOTTOM NAV ==================== -->
+    <nav id="app-nav" role="tablist" aria-label="Main navigation">
+
+      <!-- Game -->
+      <button
+        class="nav-item"
+        role="tab"
+        data-view="view-game"
+        aria-selected="false"
+        aria-controls="view-game"
+      >
+        <svg class="nav-item__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <!-- Shield icon — represents the game / combat screen -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+            d="M12 3L4 7v5c0 4.418 3.358 8.563 8 9.93C17.642 20.563 21 16.418 21 12V7l-9-4z" />
+        </svg>
+        <span>Game</span>
+      </button>
+
+      <!-- Tournament -->
+      <button
+        class="nav-item"
+        role="tab"
+        data-view="view-tournament"
+        aria-selected="false"
+        aria-controls="view-tournament"
+      >
+        <svg class="nav-item__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <!-- Trophy icon — represents tournament tools -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+            d="M8 21h8m-4-4v4M5 3h14M6 3v6a6 6 0 0012 0V3M4 6H2v3a4 4 0 004 4m14-7h2v3a4 4 0 01-4 4" />
+        </svg>
+        <span>Tournament</span>
+      </button>
+
+      <!-- Settings -->
+      <button
+        class="nav-item"
+        role="tab"
+        data-view="view-settings"
+        aria-selected="false"
+        aria-controls="view-settings"
+      >
+        <svg class="nav-item__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <!-- Gear icon — represents settings -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" />
+        </svg>
+        <span>Settings</span>
+      </button>
+
+    </nav>
+    <!-- End nav -->
+
+  </div>
+  <!-- End #app -->
+
+
+  <!-- ============================================================
+       SCRIPTS
+       app.js deferred — runs after DOM is parsed.
+       Feature modules will be added here as they are built.
+       ============================================================ -->
+  <script src="app.js" defer></script>
+
+</body>
+</html>

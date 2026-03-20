@@ -1,0 +1,399 @@
+/**
+ * styles/base.css — ResTracker PWA
+ * Foundation stylesheet. Defines the CSS custom properties,
+ * reset, typography, and app shell layout.
+ *
+ * Theme custom properties are set on :root (dark default).
+ * Switching themes is done by adding a class to <html>:
+ *   <html class="theme-light">
+ *   <html class="theme-air">
+ *   etc.
+ *
+ * All values originate from config.js — do not hard-code
+ * colours or sizes elsewhere; reference var(--token) instead.
+ */
+
+
+/* ============================================================
+   GOOGLE FONTS
+   Inter        — UI text
+   Cinzel       — Headings / display
+   JetBrains Mono — Numbers / counters
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+
+/* ============================================================
+   CSS RESET
+   Minimal, modern reset. Preserves useful browser defaults.
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+html, body {
+  height: 100%;
+}
+
+html {
+  font-size:               16px;         /* 1rem base — matches config fontSizeBase */
+  -webkit-text-size-adjust: 100%;        /* Prevent font scaling on orientation change */
+  text-size-adjust:         100%;
+}
+
+body {
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display:                 flex;
+  justify-content:         center;       /* Centre #app horizontally on wide screens */
+  overflow:                hidden;
+}
+
+img, svg {
+  display:   block;
+  max-width: 100%;
+}
+
+button {
+  cursor:     pointer;
+  border:     none;
+  background: none;
+  font:       inherit;
+  color:      inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+a {
+  color:           inherit;
+  text-decoration: none;
+}
+
+
+/* ============================================================
+   THEME: DARK (default)
+   Applied to :root — renders before JS loads.
+   Values mirror config.js → themes.dark.properties
+   ============================================================ */
+:root {
+  --bg-primary:     #0e0e12;
+  --bg-surface:     #1a1a22;
+  --bg-elevated:    #24242f;
+  --text-primary:   #f0eeea;
+  --text-secondary: #8a8898;
+  --text-on-accent: #0e0e12;
+  --accent:         #c9a84c;
+  --accent-muted:   #a07830;
+  --border:         #2e2e3a;
+  --shadow:         rgba(0, 0, 0, 0.6);
+  --danger:         #e05555;
+  --success:        #4caf82;
+}
+
+
+/* ============================================================
+   THEME: LIGHT
+   Applied via <html class="theme-light">
+   ============================================================ */
+html.theme-light {
+  --bg-primary:     #f5f4f0;
+  --bg-surface:     #ffffff;
+  --bg-elevated:    #ebebeb;
+  --text-primary:   #1a1a22;
+  --text-secondary: #6b6b78;
+  --text-on-accent: #ffffff;
+  --accent:         #a06820;
+  --accent-muted:   #c9a84c;
+  --border:         #d4d0c8;
+  --shadow:         rgba(0, 0, 0, 0.12);
+  --danger:         #d43f3f;
+  --success:        #2e8f5e;
+}
+
+
+/* ============================================================
+   THEME: AIR
+   Applied via <html class="theme-air">
+   ============================================================ */
+html.theme-air {
+  --bg-primary:     #12141e;
+  --bg-surface:     #1c1f2e;
+  --bg-elevated:    #252840;
+  --text-primary:   #e8ecf8;
+  --text-secondary: #8e96b8;
+  --text-on-accent: #12141e;
+  --accent:         rgb(170, 180, 215);
+  --accent-muted:   rgba(170, 180, 215, 0.65);
+  --border:         #2a2d42;
+  --shadow:         rgba(0, 0, 0, 0.55);
+  --danger:         #e05575;
+  --success:        #5ac8a8;
+}
+
+
+/* ============================================================
+   THEME: EARTH
+   Applied via <html class="theme-earth">
+   ============================================================ */
+html.theme-earth {
+  --bg-primary:     #141210;
+  --bg-surface:     #1e1b16;
+  --bg-elevated:    #2a2520;
+  --text-primary:   #ede8df;
+  --text-secondary: #9a9080;
+  --text-on-accent: #141210;
+  --accent:         rgb(169, 158, 125);
+  --accent-muted:   rgba(169, 158, 125, 0.65);
+  --border:         #332e26;
+  --shadow:         rgba(0, 0, 0, 0.55);
+  --danger:         #d45040;
+  --success:        #7aaa60;
+}
+
+
+/* ============================================================
+   THEME: FIRE
+   Applied via <html class="theme-fire">
+   ============================================================ */
+html.theme-fire {
+  --bg-primary:     #130a06;
+  --bg-surface:     #1e1008;
+  --bg-elevated:    #2c1810;
+  --text-primary:   #faeee8;
+  --text-secondary: #b07060;
+  --text-on-accent: #130a06;
+  --accent:         rgb(242, 92, 36);
+  --accent-muted:   rgba(242, 92, 36, 0.65);
+  --border:         #3a2018;
+  --shadow:         rgba(0, 0, 0, 0.6);
+  --danger:         #ff4444;
+  --success:        #88cc55;
+}
+
+
+/* ============================================================
+   THEME: WATER
+   Applied via <html class="theme-water">
+   ============================================================ */
+html.theme-water {
+  --bg-primary:     #07101a;
+  --bg-surface:     #0e1c28;
+  --bg-elevated:    #162838;
+  --text-primary:   #e0f4fa;
+  --text-secondary: #6090a8;
+  --text-on-accent: #07101a;
+  --accent:         rgb(101, 191, 220);
+  --accent-muted:   rgba(101, 191, 220, 0.65);
+  --border:         #1a2e3e;
+  --shadow:         rgba(0, 0, 0, 0.6);
+  --danger:         #e05060;
+  --success:        #40c090;
+}
+
+
+/* ============================================================
+   TYPOGRAPHY
+   Base font stack and scale.
+   ============================================================ */
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size:   1rem;
+  font-weight: 400;
+  color:       var(--text-primary);
+  background:  var(--bg-primary);
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-family:  'Cinzel', Georgia, serif;
+  font-weight:  600;
+  line-height:  1.2;
+  color:        var(--text-primary);
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.375rem; }
+h3 { font-size: 1.125rem; }
+
+/* Numeric / counter values */
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+
+/* ============================================================
+   APP SHELL
+   Full-height layout: header + scrollable content + bottom nav.
+   Uses CSS grid for clean, gap-free structure.
+   ============================================================ */
+#app {
+  display:               grid;
+  grid-template-rows:    56px 1fr 60px; /* header | content | nav — matches config */
+  grid-template-areas:
+    "header"
+    "content"
+    "nav";
+  height:                100dvh;         /* Full dynamic viewport height — correct on real mobile devices */
+  overflow:              hidden;
+  max-width:             480px;          /* matches config layout.maxWidth */
+  width:                 100%;           /* Fill available width up to max-width */
+  background:            var(--bg-primary);
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+#app-header {
+  grid-area:      header;
+  display:        flex;
+  align-items:    center;
+  justify-content: space-between;
+  padding-inline: 1rem;
+  background:     var(--bg-surface);
+  border-bottom:  1px solid var(--border);
+  position:       sticky;
+  top:            0;
+  z-index:        100;
+}
+
+.app-title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size:   1.125rem;
+  font-weight: 700;
+  color:       var(--accent);
+  letter-spacing: 0.04em;
+}
+
+
+/* ============================================================
+   CONTENT AREA
+   Houses all views. Only one view is visible at a time.
+   ============================================================ */
+#app-content {
+  grid-area:  content;
+  overflow-y: auto;
+  padding:    1rem;
+}
+
+
+/* ============================================================
+   VIEWS
+   All views sit in the DOM simultaneously.
+   JS toggles the .view--active class to show the current one.
+   ============================================================ */
+.view {
+  display: none;
+}
+
+.view--active {
+  display: block;
+}
+
+
+/* ============================================================
+   BOTTOM NAVIGATION
+   ============================================================ */
+#app-nav {
+  grid-area:     nav;
+  display:       flex;
+  align-items:   stretch;
+  background:    var(--bg-surface);
+  border-top:    1px solid var(--border);
+  position:      sticky;
+  bottom:        0;
+  z-index:       100;
+
+  /* Safe area inset for devices with a home indicator (iPhone etc.) */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.nav-item {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  justify-content: center;
+  gap:            4px;
+  padding-block:  8px;
+  color:          var(--text-secondary);
+  font-size:      0.6875rem;
+  font-weight:    500;
+  letter-spacing: 0.03em;
+  transition:     color 200ms ease;   /* matches config transitionSpeed */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item--active,
+.nav-item:hover {
+  color: var(--accent);
+}
+
+.nav-item__icon {
+  width:  24px;
+  height: 24px;
+  stroke: currentColor;
+  fill:   none;
+}
+
+
+/* ============================================================
+   UTILITY CLASSES
+   Reusable helpers used throughout the app.
+   ============================================================ */
+
+/* Surfaces */
+.surface {
+  background:    var(--bg-surface);
+  border:        1px solid var(--border);
+  border-radius: 10px;                  /* matches config borderRadius */
+}
+
+.surface--elevated {
+  background:    var(--bg-elevated);
+  border:        1px solid var(--border);
+  border-radius: 18px;                  /* matches config borderRadiusLg */
+  box-shadow:    0 4px 16px var(--shadow);
+}
+
+/* Spacing helpers */
+.p-1  { padding: 0.5rem; }
+.p-2  { padding: 1rem; }
+.p-3  { padding: 1.5rem; }
+.px-1 { padding-inline: 0.5rem; }
+.px-2 { padding-inline: 1rem; }
+.py-1 { padding-block: 0.5rem; }
+.py-2 { padding-block: 1rem; }
+
+/* Flex helpers */
+.flex         { display: flex; }
+.flex-col     { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-1        { gap: 0.5rem; }
+.gap-2        { gap: 1rem; }
+
+/* Visibility */
+.hidden { display: none !important; }
