@@ -31,7 +31,9 @@ const APP_CONFIG = {
     lifeCounter:       true,   // Life point tracking
     manaCounter:       true,   // Current and maximum mana tracking
     thresholdCounter:  true,   // Air / Earth / Fire / Water threshold tracking
-    tournamentTools:   true,   // Tournament and event utilities
+    gameLog:           true,   // Game event log
+    gameStats:         true,   // Game statistics
+    tournamentTools:   false,  // Tournament and event utilities (not yet implemented)
   },
 
 

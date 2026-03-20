@@ -81,16 +81,30 @@
 
 
       <!-- --------------------------------------------------
-           VIEW: TOURNAMENT
-           Tournament and event tools.
+           VIEW: LOG
+           Game event log.
            -------------------------------------------------- -->
       <section
-        id="view-tournament"
+        id="view-log"
         class="view"
         role="tabpanel"
-        aria-label="Tournament"
+        aria-label="Log"
       >
-        <!-- Tournament feature module will populate this -->
+        <!-- Log feature module will populate this -->
+      </section>
+
+
+      <!-- --------------------------------------------------
+           VIEW: STATS
+           Game statistics.
+           -------------------------------------------------- -->
+      <section
+        id="view-stats"
+        class="view"
+        role="tabpanel"
+        aria-label="Stats"
+      >
+        <!-- Stats feature module will populate this -->
       </section>
 
 
@@ -130,20 +144,36 @@
         <span>Game</span>
       </button>
 
-      <!-- Tournament -->
+      <!-- Log -->
       <button
         class="nav-item"
         role="tab"
-        data-view="view-tournament"
+        data-view="view-log"
         aria-selected="false"
-        aria-controls="view-tournament"
+        aria-controls="view-log"
       >
         <svg class="nav-item__icon" viewBox="0 0 24 24" aria-hidden="true">
-          <!-- Trophy icon — represents tournament tools -->
+          <!-- Scroll icon — represents the game log -->
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
-            d="M8 21h8m-4-4v4M5 3h14M6 3v6a6 6 0 0012 0V3M4 6H2v3a4 4 0 004 4m14-7h2v3a4 4 0 01-4 4" />
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
         </svg>
-        <span>Tournament</span>
+        <span>Log</span>
+      </button>
+
+      <!-- Stats -->
+      <button
+        class="nav-item"
+        role="tab"
+        data-view="view-stats"
+        aria-selected="false"
+        aria-controls="view-stats"
+      >
+        <svg class="nav-item__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <!-- Bar chart icon — represents statistics -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span>Stats</span>
       </button>
 
       <!-- Settings -->
@@ -175,6 +205,7 @@
        app.js deferred — runs after DOM is parsed.
        Feature modules will be added here as they are built.
        ============================================================ -->
+  <script src="js/game.js" defer></script>
   <script src="app.js" defer></script>
 
 </body>

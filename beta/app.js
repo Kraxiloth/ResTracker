@@ -249,6 +249,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initWakeLock();
   registerServiceWorker();
 
+  // Feature modules self-initialise via their own DOMContentLoaded listeners
+
   console.log(
     `[ResTracker] v${window.APP_CONFIG.app.version} initialised.`
   );

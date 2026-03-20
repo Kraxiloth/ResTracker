@@ -309,6 +309,7 @@ h3 { font-size: 1.125rem; }
 
 .view--active {
   display: block;
+  position: relative; /* Required for modal overlay positioning */
 }
 
 
@@ -397,3 +398,378 @@ h3 { font-size: 1.125rem; }
 
 /* Visibility */
 .hidden { display: none !important; }
+
+
+/* ============================================================
+   DESKTOP LAYOUT
+   On screens wider than 480px the app behaves like a centered
+   mobile panel — fixed size, lifted off the background.
+   Mobile behaviour (100dvh, full width) is unchanged.
+   ============================================================ */
+@media (min-width: 480px) {
+  body {
+    background:      #000000;            /* Backdrop behind the app panel */
+    align-items:     center;             /* Vertically centre the panel */
+    justify-content: center;             /* Horizontally centre the panel */
+    min-height:      100dvh;
+  }
+
+  #app {
+    height:          812px;              /* Approximate tall phone height */
+    max-height:      90dvh;             /* Never taller than 90% of the window */
+    width:           390px;             /* Standard modern phone width */
+    border-radius:   40px;              /* Rounded corners — phone-like feel */
+    overflow:        hidden;
+    box-shadow:      0 32px 80px rgba(0, 0, 0, 0.8);
+  }
+}
+
+
+/* ============================================================
+   GAME SCREEN
+   Styles for js/game.js components.
+   Spacing is intentionally tight — all sections must be
+   visible without scrolling on a standard mobile viewport.
+   ============================================================ */
+
+/* Viewport height breakpoints — mirrors the old app's approach */
+:root {
+  --game-pad-v:     8px;
+  --game-pad-h:     12px;
+  --game-life-size: 3rem;
+  --game-btn-lg:    40px;
+  --game-btn-sm:    22px;
+  --game-btn-xs:    20px;
+  --game-label-size: 0.5625rem;
+}
+
+@media (max-height: 700px) {
+  :root {
+    --game-pad-v:     5px;
+    --game-pad-h:     10px;
+    --game-life-size: 2.25rem;
+    --game-btn-lg:    34px;
+    --game-btn-sm:    20px;
+    --game-btn-xs:    18px;
+  }
+}
+
+/* Section wrapper */
+.game-section {
+  padding:       var(--game-pad-v) var(--game-pad-h);
+  border-bottom: 1px solid var(--border);
+}
+
+.game-section--row {
+  display: flex;
+  gap:     6px;
+}
+
+.game-section--last {
+  border-bottom: none;
+}
+
+.game-section__label {
+  font-size:      var(--game-label-size);
+  font-weight:    500;
+  color:          var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom:  4px;
+}
+
+
+/* Life counter */
+.game-counter {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             8px;
+}
+
+.game-counter__value--lg {
+  flex:         1;
+  text-align:   center;
+  font-size:    var(--game-life-size);
+  line-height:  1;
+  color:        var(--text-primary);
+}
+
+
+/* Mana section */
+.game-mana {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+}
+
+.game-mana__cluster {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            3px;
+  flex-shrink:    0;
+}
+
+.game-mana__cluster-label {
+  font-size:  0.4375rem;
+  color:      var(--text-secondary);
+  text-align: center;
+}
+
+.game-mana__cluster-btns {
+  display: flex;
+  gap:     3px;
+}
+
+.game-mana__fraction {
+  flex:            1;
+  display:         flex;
+  align-items:     baseline;
+  justify-content: center;
+  gap:             2px;
+}
+
+.game-mana__value {
+  font-size:   1.5rem;
+  color:       var(--accent);
+  width:       32px;
+  text-align:  center;
+  display:     inline-block;
+}
+
+.game-mana__sep {
+  font-size:   1rem;
+  color:       var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+
+/* Threshold grid */
+.game-thresholds {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   0;
+}
+
+.game-threshold-cell {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  padding:     5px 4px;
+}
+
+.game-threshold-cell:nth-child(1),
+.game-threshold-cell:nth-child(2) {
+  border-bottom: 1px solid var(--border);
+}
+
+.game-threshold-cell:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.game-threshold-cell__icon {
+  width:      18px;
+  height:     18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.game-threshold-cell__value {
+  font-size:   0.8125rem;
+  width:       20px;
+  text-align:  center;
+  display:     inline-block;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+}
+
+
+/* Buttons */
+.game-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   8px;
+  background:      var(--bg-elevated);
+  border:          1px solid var(--border);
+  color:           var(--text-primary);
+  flex-shrink:     0;
+  transition:      opacity 200ms ease;
+}
+
+.game-btn--lg {
+  width:     var(--game-btn-lg);
+  height:    var(--game-btn-lg);
+  font-size: 1.25rem;
+}
+
+.game-btn--sm {
+  width:     var(--game-btn-sm);
+  height:    var(--game-btn-sm);
+  font-size: 0.8125rem;
+  border-radius: 4px;
+}
+
+.game-btn--xs {
+  width:     var(--game-btn-xs);
+  height:    var(--game-btn-xs);
+  font-size: 0.75rem;
+  border-radius: 4px;
+}
+
+.game-btn--disabled {
+  opacity: 0.25;
+  cursor:  not-allowed;
+}
+
+
+/* Action buttons (New Turn, End Turn, End Game, Reset Game) */
+.game-action-btn {
+  flex:            1;
+  min-width:       0;
+  width:           0;
+  height:          30px;
+  border-radius:   8px;
+  background:      transparent;
+  border:          1px solid var(--border);
+  color:           var(--text-secondary);
+  font-size:       0.5625rem;
+  font-weight:     500;
+  letter-spacing:  0.03em;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  white-space:     nowrap;
+  overflow:        hidden;
+  transition:      all 200ms ease;
+}
+
+.game-action-btn--primary {
+  background:  var(--accent);
+  border:      none;
+  color:       var(--text-on-accent);
+  font-weight: 600;
+}
+
+.game-action-btn--danger {
+  border-color: var(--danger);
+  color:        var(--danger);
+}
+
+.game-action-btn--disabled {
+  opacity: 0.25;
+  cursor:  not-allowed;
+}
+
+
+/* Modals */
+.game-modal {
+  position:        absolute;
+  inset:           0;
+  background:      rgba(0, 0, 0, 0.85);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         1rem;
+  z-index:         200;
+}
+
+.game-modal.hidden {
+  display: none;
+}
+
+.game-modal__box {
+  background:    var(--bg-surface);
+  border:        1px solid var(--border);
+  border-radius: 18px;
+  padding:       1.25rem;
+  width:         100%;
+  max-width:     320px;
+}
+
+.game-modal__title {
+  font-family:   'Cinzel', Georgia, serif;
+  font-size:     1rem;
+  font-weight:   600;
+  color:         var(--text-primary);
+  text-align:    center;
+  margin-bottom: 0.25rem;
+}
+
+.game-modal__subtitle {
+  font-size:     0.625rem;
+  color:         var(--text-secondary);
+  text-align:    center;
+  margin-bottom: 0.75rem;
+}
+
+.game-modal__row {
+  display:       flex;
+  gap:           0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.game-modal__btn {
+  flex:            1;
+  min-width:       0;
+  width:           0;
+  height:          38px;
+  border-radius:   8px;
+  background:      var(--bg-elevated);
+  border:          1px solid var(--border);
+  color:           var(--text-primary);
+  font-size:       0.625rem;
+  font-weight:     500;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  white-space:     nowrap;
+  overflow:        hidden;
+}
+
+.game-modal__btn--accent {
+  background:  var(--accent);
+  border:      none;
+  color:       var(--text-on-accent);
+  font-weight: 600;
+}
+
+.game-modal__btn--success {
+  border-color: var(--success);
+  color:        var(--success);
+  background:   transparent;
+}
+
+.game-modal__btn--danger {
+  border-color: var(--danger);
+  color:        var(--danger);
+  background:   transparent;
+}
+
+.game-modal__cancel {
+  width:           100%;
+  height:          30px;
+  border-radius:   8px;
+  background:      transparent;
+  border:          1px solid var(--border);
+  color:           var(--text-secondary);
+  font-size:       0.5625rem;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+
+/* Header New Game button */
+.header-btn {
+  font-size:      0.625rem;
+  font-weight:    500;
+  color:          var(--accent);
+  border:         1px solid var(--accent);
+  border-radius:  6px;
+  padding:        0.25rem 0.625rem;
+  background:     transparent;
+  letter-spacing: 0.03em;
+}

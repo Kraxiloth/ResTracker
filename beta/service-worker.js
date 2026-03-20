@@ -16,7 +16,7 @@
 //  Bump CACHE_VERSION whenever you deploy changes to force
 //  existing installs to fetch fresh assets.
 // ============================================================
-const CACHE_VERSION  = "v1";
+const CACHE_VERSION  = "v4";
 const CACHE_NAME     = `restracker-${CACHE_VERSION}`;
 
 
@@ -32,6 +32,11 @@ const CORE_ASSETS = [
   "./config.js",
   "./app.js",
   "./styles/base.css",
+  "./js/game.js",
+  "./res/air.png",
+  "./res/earth.png",
+  "./res/fire.png",
+  "./res/water.png",
   "./assets/icons/favicon-16x16.png",
   "./assets/icons/favicon-32x32.png",
   "./assets/icons/apple-touch-icon.png",
