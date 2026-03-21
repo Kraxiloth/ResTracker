@@ -16,7 +16,7 @@
 //  Bump CACHE_VERSION whenever you deploy changes to force
 //  existing installs to fetch fresh assets.
 // ============================================================
-const CACHE_VERSION  = "v4";
+const CACHE_VERSION  = "v47";
 const CACHE_NAME     = `restracker-${CACHE_VERSION}`;
 
 
@@ -32,7 +32,11 @@ const CORE_ASSETS = [
   "./config.js",
   "./app.js",
   "./styles/base.css",
+  "./js/timer.js",
   "./js/game.js",
+  "./js/log.js",
+  "./js/stats.js",
+  "./js/settings.js",
   "./res/air.png",
   "./res/earth.png",
   "./res/fire.png",

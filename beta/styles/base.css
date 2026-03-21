@@ -249,9 +249,10 @@ h3 { font-size: 1.125rem; }
    ============================================================ */
 #app {
   display:               grid;
-  grid-template-rows:    56px 1fr 60px; /* header | content | nav — matches config */
+  grid-template-rows:    56px auto 1fr 60px; /* header | timer | content | nav */
   grid-template-areas:
     "header"
+    "timer"
     "content"
     "nav";
   height:                100dvh;         /* Full dynamic viewport height — correct on real mobile devices */
@@ -434,23 +435,23 @@ h3 { font-size: 1.125rem; }
 
 /* Viewport height breakpoints — mirrors the old app's approach */
 :root {
-  --game-pad-v:     8px;
-  --game-pad-h:     12px;
-  --game-life-size: 3rem;
-  --game-btn-lg:    40px;
-  --game-btn-sm:    22px;
-  --game-btn-xs:    20px;
+  --game-pad-v:      10px;
+  --game-pad-h:      14px;
+  --game-life-size:  3.5rem;
+  --game-btn-lg:     52px;
+  --game-btn-sm:     36px;
+  --game-btn-xs:     36px;
   --game-label-size: 0.5625rem;
 }
 
 @media (max-height: 700px) {
   :root {
-    --game-pad-v:     5px;
+    --game-pad-v:     6px;
     --game-pad-h:     10px;
-    --game-life-size: 2.25rem;
-    --game-btn-lg:    34px;
-    --game-btn-sm:    20px;
-    --game-btn-xs:    18px;
+    --game-life-size: 2.5rem;
+    --game-btn-lg:    44px;
+    --game-btn-sm:    30px;
+    --game-btn-xs:    30px;
   }
 }
 
@@ -463,6 +464,12 @@ h3 { font-size: 1.125rem; }
 .game-section--row {
   display: flex;
   gap:     6px;
+}
+
+/* Extra breathing room around the action button rows */
+.game-section--actions {
+  padding-top:    16px;
+  padding-bottom: 16px;
 }
 
 .game-section--last {
@@ -488,11 +495,13 @@ h3 { font-size: 1.125rem; }
 }
 
 .game-counter__value--lg {
-  flex:         1;
+  width:        2ch;            /* Fixed two-character width — single digits centre naturally */
   text-align:   center;
   font-size:    var(--game-life-size);
   line-height:  1;
   color:        var(--text-primary);
+  font-family:  'JetBrains Mono', monospace;
+  flex-shrink:  0;
 }
 
 
@@ -507,19 +516,22 @@ h3 { font-size: 1.125rem; }
   display:        flex;
   flex-direction: column;
   align-items:    center;
-  gap:            3px;
+  justify-content: center;
+  gap:            4px;
   flex-shrink:    0;
 }
 
 .game-mana__cluster-label {
-  font-size:  0.4375rem;
+  font-size:  0.5rem;
   color:      var(--text-secondary);
   text-align: center;
+  line-height: 1;
 }
 
 .game-mana__cluster-btns {
-  display: flex;
-  gap:     3px;
+  display:     flex;
+  gap:         4px;
+  align-items: center;
 }
 
 .game-mana__fraction {
@@ -533,9 +545,10 @@ h3 { font-size: 1.125rem; }
 .game-mana__value {
   font-size:   1.5rem;
   color:       var(--accent);
-  width:       32px;
+  width:       2ch;            /* Exactly two character widths in monospace */
   text-align:  center;
   display:     inline-block;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .game-mana__sep {
@@ -553,10 +566,11 @@ h3 { font-size: 1.125rem; }
 }
 
 .game-threshold-cell {
-  display:     flex;
-  align-items: center;
-  gap:         4px;
-  padding:     5px 4px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             6px;
+  padding:         8px 4px;
 }
 
 .game-threshold-cell:nth-child(1),
@@ -577,7 +591,7 @@ h3 { font-size: 1.125rem; }
 
 .game-threshold-cell__value {
   font-size:   0.8125rem;
-  width:       20px;
+  width:       2ch;            /* Exactly two character widths in monospace */
   text-align:  center;
   display:     inline-block;
   flex-shrink: 0;
@@ -613,10 +627,10 @@ h3 { font-size: 1.125rem; }
 }
 
 .game-btn--xs {
-  width:     var(--game-btn-xs);
-  height:    var(--game-btn-xs);
-  font-size: 0.75rem;
-  border-radius: 4px;
+  width:        var(--game-btn-xs);
+  height:       var(--game-btn-xs);
+  font-size:    1rem;
+  border-radius: 8px;
 }
 
 .game-btn--disabled {
@@ -630,12 +644,12 @@ h3 { font-size: 1.125rem; }
   flex:            1;
   min-width:       0;
   width:           0;
-  height:          30px;
-  border-radius:   8px;
+  height:          44px;
+  border-radius:   10px;
   background:      transparent;
   border:          1px solid var(--border);
   color:           var(--text-secondary);
-  font-size:       0.5625rem;
+  font-size:       0.75rem;
   font-weight:     500;
   letter-spacing:  0.03em;
   display:         flex;
@@ -772,4 +786,464 @@ h3 { font-size: 1.125rem; }
   padding:        0.25rem 0.625rem;
   background:     transparent;
   letter-spacing: 0.03em;
+}
+
+
+/* ============================================================
+   LOG SCREEN
+   Styles for js/log.js components.
+   ============================================================ */
+
+.log-empty {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         3rem 1rem;
+}
+
+.log-empty__text {
+  font-size:   0.875rem;
+  color:       var(--text-secondary);
+  text-align:  center;
+  line-height: 1.6;
+}
+
+/* Turn group */
+.log-group {
+  border-bottom: 1px solid var(--border);
+}
+
+.log-group:last-child {
+  border-bottom: none;
+}
+
+.log-group__header {
+  width:           100%;
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         10px 14px;
+  background:      transparent;
+  border:          none;
+  color:           var(--text-primary);
+  cursor:          pointer;
+  text-align:      left;
+  gap:             8px;
+}
+
+.log-group__header-left {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  min-width:      0;
+}
+
+.log-group__label {
+  font-family:  'Cinzel', Georgia, serif;
+  font-size:    0.75rem;
+  font-weight:  600;
+  color:        var(--accent);
+}
+
+.log-group__summary {
+  font-size:     0.625rem;
+  color:         var(--text-secondary);
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+.log-group__chevron {
+  font-size:   0.5rem;
+  color:       var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* Events list */
+.log-group__events {
+  padding:        0 14px 10px;
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
+.log-event {
+  display:     flex;
+  align-items: baseline;
+  gap:         8px;
+  font-size:   0.6875rem;
+  color:       var(--text-primary);
+}
+
+.log-event--empty {
+  color:       var(--text-secondary);
+  font-style:  italic;
+}
+
+.log-event--success .log-event__text { color: var(--success); }
+.log-event--danger  .log-event__text { color: var(--danger); }
+.log-event--accent  .log-event__text { color: var(--accent); }
+
+.log-event__time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size:   0.5625rem;
+  color:       var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.log-event__text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+
+/* ============================================================
+   STATS SCREEN
+   Styles for js/stats.js components.
+   ============================================================ */
+
+.stats-empty {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         3rem 1rem;
+}
+
+.stats-empty__text {
+  font-size:   0.875rem;
+  color:       var(--text-secondary);
+  text-align:  center;
+  line-height: 1.6;
+}
+
+.stats-section-label {
+  font-size:      0.5625rem;
+  font-weight:    500;
+  color:          var(--text-secondary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding:        12px 14px 6px;
+}
+
+/* Overview grid — 2 columns */
+.stats-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   6px;
+  padding:               0 14px;
+}
+
+.stats-card {
+  background:    var(--bg-surface);
+  border:        1px solid var(--border);
+  border-radius: 10px;
+  padding:       10px 12px;
+  display:       flex;
+  flex-direction: column;
+  gap:           4px;
+}
+
+.stats-card__label {
+  font-size:      0.5rem;
+  font-weight:    500;
+  color:          var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stats-card__value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size:   1.5rem;
+  font-weight: 500;
+  color:       var(--text-primary);
+  line-height: 1;
+}
+
+.stats-card__value--success { color: var(--success); }
+.stats-card__value--danger  { color: var(--danger); }
+.stats-card__value--accent  { color: var(--accent); }
+.stats-card__value--muted   { color: var(--text-secondary); }
+
+
+/* Life graph */
+.stats-chart-wrap {
+  margin:        0 14px;
+  background:    var(--bg-surface);
+  border:        1px solid var(--border);
+  border-radius: 10px;
+  overflow:      hidden;
+  padding:       8px;
+}
+
+.stats-chart {
+  width:    100%;
+  height:   auto;
+  display:  block;
+}
+
+.stats-chart-empty {
+  font-size:  0.75rem;
+  color:      var(--text-secondary);
+  text-align: center;
+  padding:    1.5rem;
+}
+
+
+/* Threshold bars */
+.stats-thresholds {
+  display:        flex;
+  flex-direction: column;
+  gap:            8px;
+  padding:        0 14px 14px;
+}
+
+.stats-thr-row {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+}
+
+.stats-thr-row__label {
+  font-size:   0.625rem;
+  font-weight: 500;
+  width:       40px;
+  flex-shrink: 0;
+}
+
+.stats-thr-row__bar-wrap {
+  flex:          1;
+  height:        6px;
+  background:    var(--bg-elevated);
+  border-radius: 3px;
+  overflow:      hidden;
+}
+
+.stats-thr-row__bar {
+  height:        100%;
+  border-radius: 3px;
+  transition:    width 400ms ease;
+  min-width:     2px;
+}
+
+.stats-thr-row__value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size:   0.75rem;
+  font-weight: 500;
+  width:       20px;
+  text-align:  right;
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   TIMER BAR
+   Sits between the header and the game content.
+   Only visible during an active game.
+   ============================================================ */
+.timer-bar {
+  grid-area:       timer;
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         6px 14px;
+  background:      var(--bg-surface);
+  border-bottom:   1px solid var(--border);
+  gap:             8px;
+}
+
+.timer-bar.hidden {
+  display: none;
+}
+
+.timer__player {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            2px;
+  flex:           1;
+}
+
+.timer__name {
+  font-size:      0.5rem;
+  font-weight:    500;
+  color:          var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.timer__value {
+  font-size:   1rem;
+  font-weight: 500;
+  color:       var(--text-secondary);
+  transition:  color 200ms ease;
+  line-height: 1;
+}
+
+.timer__value--active {
+  color: var(--accent);
+}
+
+.timer__value--expired {
+  color: var(--danger);
+}
+
+.timer__divider {
+  width:         1px;
+  height:        28px;
+  background:    var(--border);
+  flex-shrink:   0;
+}
+
+
+/* ============================================================
+   SETTINGS SCREEN
+   Styles for js/settings.js components.
+   ============================================================ */
+
+.settings-section {
+  padding:       12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-section--last {
+  border-bottom: none;
+}
+
+.settings-section__label {
+  font-size:      0.5625rem;
+  font-weight:    500;
+  color:          var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom:  10px;
+}
+
+.settings-row {
+  display:        flex;
+  align-items:    center;
+  justify-content: space-between;
+  gap:            12px;
+  margin-bottom:  8px;
+}
+
+.settings-row:last-child {
+  margin-bottom: 0;
+}
+
+.settings-row__label {
+  font-size:   0.75rem;
+  color:       var(--text-primary);
+  flex-shrink: 0;
+}
+
+.settings-row__input {
+  flex:          1;
+  height:        36px;
+  background:    var(--bg-elevated);
+  border:        1px solid var(--border);
+  border-radius: 8px;
+  color:         var(--text-primary);
+  font-size:     0.8125rem;
+  font-family:   inherit;
+  padding:       0 10px;
+  text-align:    right;
+  min-width:     0;
+}
+
+.settings-row__input--sm {
+  max-width: 80px;
+}
+
+.settings-row__input:focus {
+  outline:      none;
+  border-color: var(--accent);
+}
+
+.settings-row__select {
+  flex:          1;
+  height:        36px;
+  background:    var(--bg-elevated);
+  border:        1px solid var(--border);
+  border-radius: 8px;
+  color:         var(--text-primary);
+  font-size:     0.8125rem;
+  font-family:   inherit;
+  padding:       0 10px;
+  text-align:    right;
+  min-width:     0;
+  cursor:        pointer;
+}
+
+.settings-row__select:focus {
+  outline:      none;
+  border-color: var(--accent);
+}
+
+
+/* Theme picker */
+.settings-themes {
+  display:   grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:       8px;
+}
+
+.settings-theme-btn {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            6px;
+  padding:        10px 6px;
+  background:     var(--bg-elevated);
+  border:         1px solid var(--border);
+  border-radius:  10px;
+  cursor:         pointer;
+  transition:     border-color 200ms ease;
+}
+
+.settings-theme-btn--active {
+  border-color: var(--theme-accent, var(--accent));
+}
+
+.settings-theme-btn__swatch {
+  width:         28px;
+  height:        28px;
+  border-radius: 50%;
+  background:    var(--theme-accent);
+  border:        2px solid var(--theme-bg);
+  box-shadow:    0 0 0 1px var(--theme-accent);
+}
+
+.settings-theme-btn__label {
+  font-size:   0.5625rem;
+  font-weight: 500;
+  color:       var(--text-secondary);
+}
+
+.settings-theme-btn--active .settings-theme-btn__label {
+  color: var(--text-primary);
+}
+
+
+/* Danger button */
+.settings-danger-btn {
+  width:           100%;
+  height:          44px;
+  border-radius:   10px;
+  background:      transparent;
+  border:          1px solid var(--danger);
+  color:           var(--danger);
+  font-size:       0.8125rem;
+  font-weight:     500;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  cursor:          pointer;
+  margin-bottom:   8px;
+}
+
+.settings-hint {
+  font-size:   0.5625rem;
+  color:       var(--text-secondary);
+  text-align:  center;
+  line-height: 1.5;
 }

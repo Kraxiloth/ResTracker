@@ -23,6 +23,35 @@ const APP_CONFIG = {
 
 
   // ============================================================
+  //  PLAYERS
+  //  Names used in the timer display and log.
+  // ============================================================
+  players: {
+    yourName:     "You",        // Your display name
+    opponentName: "Opponent",   // Opponent display name
+  },
+
+
+  // ============================================================
+  //  TIMER
+  //  Chess-style per-player timer settings.
+  //
+  //  mode:         "stopwatch" — counts up from 0:00
+  //                "countdown" — counts down from timerLimit
+  //  timerLimit:   Duration in seconds for countdown mode.
+  //                Default: 30 minutes (1800 seconds)
+  //  alertSound:   Play a sound when countdown hits 0:00
+  //  alertFlash:   Flash the timer display when countdown hits 0:00
+  // ============================================================
+  timer: {
+    mode:       "stopwatch",   // "stopwatch" | "countdown"
+    timerLimit: 30 * 60,       // Countdown duration in seconds. Default: 30 minutes
+    alertSound: true,          // Play alert sound when countdown expires
+    alertFlash: true,          // Flash timer display when countdown expires
+  },
+
+
+  // ============================================================
   //  FEATURE FLAGS
   //  Set a flag to false to hide / disable that feature entirely.
   //  Useful for staging features before they are ready.
@@ -43,17 +72,17 @@ const APP_CONFIG = {
   //  Change these if official rules update default values.
   // ============================================================
   gameDefaults: {
+    version:            "1",   // Bump this whenever defaults change to invalidate saved state
     startingLife:       20,    // Default starting life total
+    startingLifeMax:    20,    // Default life ceiling at game start
     startingMana:        0,    // Default current mana at game start
-    startingManaMax:    10,    // Default mana ceiling at game start
+    startingManaMax:     0,    // Default mana ceiling at game start
     startingThresholds: {
       air:   0,
       earth: 0,
       fire:  0,
       water: 0,
     },
-    minPlayers: 2,             // Minimum number of players in a game session
-    maxPlayers: 4,             // Maximum number of players in a game session
   },
 
 

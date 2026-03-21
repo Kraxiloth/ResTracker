@@ -82,6 +82,7 @@ const WAKE_LOCK_TIMEOUT = window.APP_CONFIG.app.wakeLockTimeout;
  */
 async function acquireWakeLock() {
   if (!("wakeLock" in navigator)) return;
+  if (document.visibilityState !== "visible") return;
 
   try {
     wakeLock = await navigator.wakeLock.request("screen");
@@ -249,11 +250,13 @@ document.addEventListener("DOMContentLoaded", () => {
   initWakeLock();
   registerServiceWorker();
 
-  // Feature modules self-initialise via their own DOMContentLoaded listeners
+  if (typeof initTimer    === "function") initTimer();
+  if (typeof initGame     === "function") initGame();
+  if (typeof initLog      === "function") initLog();
+  if (typeof initStats    === "function") initStats();
+  if (typeof initSettings === "function") initSettings();
 
-  console.log(
-    `[ResTracker] v${window.APP_CONFIG.app.version} initialised.`
-  );
+  console.log(`[ResTracker] v${window.APP_CONFIG.app.version} initialised.`);
 });
 
 
@@ -262,9 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
 //  Expose key functions for use by feature modules and
 //  the settings screen (e.g. theme switcher).
 // ============================================================
-window.ResTracker = {
+window.ResTracker = window.ResTracker || {};
+Object.assign(window.ResTracker, {
   applyTheme,
   navigateTo,
   acquireWakeLock,
   releaseWakeLock,
-};
+});

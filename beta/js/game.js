@@ -49,24 +49,33 @@ let state = null;
 function defaultState() {
   const d = window.APP_CONFIG.gameDefaults;
   return {
-    phase:      PHASE.IDLE,
-    life:       d.startingLife,
-    manaCurrent: d.startingMana,
-    manaMax:    d.startingManaMax,
-    thresholds: { ...d.startingThresholds },
-    turnNumber: 0,
+    gameDefaultsVersion: d.version,   // Used to detect stale localStorage state
+    phase:               PHASE.IDLE,
+    life:                d.startingLife,
+    lifeMax:             d.startingLifeMax,
+    manaCurrent:         d.startingMana,
+    manaMax:             d.startingManaMax,
+    thresholds:          { ...d.startingThresholds },
+    turnNumber:          0,
   };
 }
 
 /**
  * Loads state from localStorage, falling back to defaults.
+ * If the saved state's gameDefaultsVersion doesn't match config,
+ * the stale state is discarded and fresh defaults are used.
  */
 function loadState() {
+  const configVersion = window.APP_CONFIG.gameDefaults.version;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      state = JSON.parse(raw);
-      return;
+      const saved = JSON.parse(raw);
+      if (saved.gameDefaultsVersion === configVersion) {
+        state = saved;
+        return;
+      }
+      console.log("[ResTracker] Game defaults version changed — discarding stale state.");
     }
   } catch (e) {
     console.warn("[ResTracker] Failed to parse game state:", e);
@@ -88,12 +97,27 @@ function persistState() {
 
 // ============================================================
 //  LOGGING
-//  Emits events to the log module if available.
-//  Safe to call even if the log module isn't loaded yet.
+//  Writes events directly to localStorage under LOG_EVENTS_KEY.
+//  log.js reads from localStorage independently — fully decoupled.
 // ============================================================
+const LOG_EVENTS_KEY = "restracker-log-events";
+
 function logEvent(type, detail = {}) {
-  if (window.ResTracker?.addLogEntry) {
-    window.ResTracker.addLogEntry({ type, detail, timestamp: Date.now() });
+  try {
+    const raw    = localStorage.getItem(LOG_EVENTS_KEY);
+    const events = raw ? JSON.parse(raw) : [];
+    events.push({ type, detail, timestamp: Date.now() });
+    localStorage.setItem(LOG_EVENTS_KEY, JSON.stringify(events));
+  } catch (e) {
+    console.warn("[ResTracker] Failed to write log event:", e);
+  }
+}
+
+function clearLogEvents() {
+  try {
+    localStorage.removeItem(LOG_EVENTS_KEY);
+  } catch (e) {
+    console.warn("[ResTracker] Failed to clear log events:", e);
   }
 }
 
@@ -109,35 +133,52 @@ function logEvent(type, detail = {}) {
  */
 function startGame(firstTurn) {
   state = defaultState();
-  state.phase     = firstTurn === "you" ? PHASE.YOUR_TURN : PHASE.THEIR_TURN;
+  state.phase      = firstTurn === "you" ? PHASE.YOUR_TURN : PHASE.THEIR_TURN;
   state.turnNumber = 1;
+  clearLogEvents();
+  window.ResTracker?.clearTimerState?.();
   persistState();
   logEvent("game_start", { firstTurn });
+  if (firstTurn === "you") {
+    window.ResTracker?.startYourTimer?.();
+  } else {
+    window.ResTracker?.startOpponentTimer?.();
+  }
+  window.ResTracker?.setTimerVisible?.(true);
   render();
 }
 
 /**
  * Ends the current turn.
  * Switches phase between YOUR_TURN and THEIR_TURN.
+ * Logs the end of the current half-turn and starts a new
+ * log group for the opponent's half-turn immediately.
  */
 function endTurn() {
-  if (state.phase !== PHASE.YOUR_TURN && state.phase !== PHASE.THEIR_TURN) return;
-  const wasYours = state.phase === PHASE.YOUR_TURN;
-  state.phase = wasYours ? PHASE.THEIR_TURN : PHASE.YOUR_TURN;
-  logEvent("turn_end", { turn: state.turnNumber, player: wasYours ? "you" : "opponent" });
+  if (state.phase !== PHASE.YOUR_TURN) return;
+  state.phase = PHASE.THEIR_TURN;
+
+  logEvent("turn_end", { turn: state.turnNumber, player: "you" });
+  logEvent("opponent_turn_start", { turn: state.turnNumber });
+  window.ResTracker?.startOpponentTimer?.();
+
   persistState();
   render();
 }
 
 /**
- * Starts a new turn.
- * Sets current mana to max mana and increments turn counter.
+ * Starts a new turn (your turn).
+ * Only callable when it is the opponent's turn.
+ * Sets current mana to max mana, increments turn counter,
+ * and opens a new log group for your turn.
  */
 function newTurn() {
-  if (state.phase !== PHASE.YOUR_TURN && state.phase !== PHASE.THEIR_TURN) return;
+  if (state.phase !== PHASE.THEIR_TURN) return;
+  state.phase = PHASE.YOUR_TURN;
   state.turnNumber++;
   state.manaCurrent = state.manaMax;
   logEvent("turn_start", { turn: state.turnNumber });
+  window.ResTracker?.startYourTimer?.();
   persistState();
   render();
 }
@@ -148,6 +189,8 @@ function newTurn() {
  */
 function endGame(winner) {
   state.phase = PHASE.ENDED;
+  window.ResTracker?.stopAllTimers?.();
+  window.ResTracker?.setTimerVisible?.(false);
   persistState();
   logEvent("game_end", { winner });
   render();
@@ -158,32 +201,42 @@ function endGame(winner) {
  */
 function resetGame() {
   state = defaultState();
+  window.ResTracker?.stopAllTimers?.();
+  window.ResTracker?.clearTimerState?.();
+  window.ResTracker?.setTimerVisible?.(false);
   persistState();
   logEvent("game_reset", {});
   render();
 }
 
 /**
- * Changes a numeric state value by a delta, clamped to min 0.
- * @param {string} key   — state key to change
- * @param {number} delta — amount to change by (+1 or -1)
+ * Universal value adjustment function.
+ * All counter +/- buttons route through here.
+ *
+ * @param {object} opts
+ * @param {function} opts.getValue   — () => current numeric value
+ * @param {function} opts.setValue   — (n) => writes the new value to state
+ * @param {number}   opts.delta      — +1 or -1
+ * @param {number}   [opts.min=0]    — minimum allowed value
+ * @param {number}   [opts.max=Infinity] — maximum allowed value
+ * @param {string}   [opts.logType]  — event type string for the log
+ * @param {object}   [opts.logDetail={}] — extra fields merged into the log entry
  */
-function changeValue(key, delta) {
+function adjustValue({ getValue, setValue, delta, min = 0, max = Infinity, logType = null, logDetail = {} }) {
   if (state.phase === PHASE.IDLE || state.phase === PHASE.ENDED) return;
-  const current = state[key] ?? 0;
-  state[key] = Math.max(0, current + delta);
-  persistState();
-  renderValues();
-}
 
-/**
- * Changes a threshold value by a delta, clamped to min 0.
- * @param {string} element — air | earth | fire | water
- * @param {number} delta
- */
-function changeThreshold(element, delta) {
-  if (state.phase === PHASE.IDLE || state.phase === PHASE.ENDED) return;
-  state.thresholds[element] = Math.max(0, (state.thresholds[element] ?? 0) + delta);
+  const from     = getValue();
+  const clamped  = Math.min(max, Math.max(min, from + delta));
+  const actual   = clamped - from;
+
+  if (actual === 0) return; // Already at boundary — nothing to do
+
+  setValue(clamped);
+
+  if (logType) {
+    logEvent(logType, { ...logDetail, from, to: clamped, delta: actual });
+  }
+
   persistState();
   renderValues();
 }
@@ -294,7 +347,7 @@ function render() {
     </div>
 
     <!-- ── Turn buttons ── -->
-    <div class="game-section game-section--row" id="section-turns">
+    <div class="game-section game-section--row game-section--actions" id="section-turns">
       <button class="game-action-btn" id="btn-new-turn">New Turn</button>
       <button class="game-action-btn game-action-btn--primary" id="btn-end-turn">End Turn</button>
     </div>
@@ -315,7 +368,7 @@ function render() {
     </div>
 
     <!-- ── End Game / Reset Game ── -->
-    <div class="game-section game-section--row game-section--last" id="section-game-btns">
+    <div class="game-section game-section--row game-section--actions game-section--last" id="section-game-btns">
       <button class="game-action-btn game-action-btn--danger" id="btn-end-game">End Game</button>
       <button class="game-action-btn" id="btn-reset-game">Reset Game</button>
     </div>
@@ -369,11 +422,11 @@ function render() {
  * Called after counter changes to avoid full DOM rebuild.
  */
 function renderValues() {
-  setText("val-life",       pad(state.life));
-  setText("val-mana-cur",   pad(state.manaCurrent));
-  setText("val-mana-max",   pad(state.manaMax));
-  THRESHOLDS.forEach(el => {
-    setText(`val-thr-${el}`, pad(state.thresholds[el]));
+  renderPaddedValue("val-life",     state.life);
+  renderPaddedValue("val-mana-cur", state.manaCurrent);
+  renderPaddedValue("val-mana-max", state.manaMax);
+  THRESHOLDS.forEach(element => {
+    renderPaddedValue(`val-thr-${element}`, state.thresholds[element]);
   });
 }
 
@@ -404,10 +457,21 @@ function renderPhase() {
   setOpacity("section-mana",       active ? "1" : "0.35");
   setOpacity("section-thresholds", active ? "1" : "0.35");
 
+  // New Game header button — disabled while a game is in progress
+  const headerBtn = document.getElementById("btn-header-new-game");
+  if (headerBtn) {
+    headerBtn.disabled = active;
+    headerBtn.style.opacity = active ? "0.35" : "1";
+    headerBtn.style.cursor  = active ? "not-allowed" : "pointer";
+  }
+
   // Turn buttons
-  setDisabled("btn-new-turn", !active);
-  setDisabled("btn-end-turn", !active);
-  setAccent("btn-new-turn",  active && !yours);
+  // New Turn: enabled only when it's the opponent's turn (to pass back to you)
+  //           or at the start of game before first move
+  // End Turn: enabled only when it's your turn
+  setDisabled("btn-new-turn", !active || yours);
+  setDisabled("btn-end-turn", !active || !yours);
+  setAccent("btn-new-turn",  active && theirs);
   setAccent("btn-end-turn",  active && yours);
 
   // Game buttons
@@ -421,15 +485,69 @@ function renderPhase() {
 // ============================================================
 function attachListeners() {
 
-  // Life
-  on("btn-life-dec", "click", () => changeValue("life", -1));
-  on("btn-life-inc", "click", () => changeValue("life",  1));
+  // Life — clamped between 0 and startingLifeMax
+  const lifeMax = window.APP_CONFIG.gameDefaults.startingLifeMax;
+  on("btn-life-dec", "click", () => adjustValue({
+    getValue:  () => state.life,
+    setValue:  (n) => { state.life = n; },
+    delta:     -1,
+    min:       0,
+    max:       lifeMax,
+    logType:   "life_change",
+  }));
+  on("btn-life-inc", "click", () => adjustValue({
+    getValue:  () => state.life,
+    setValue:  (n) => { state.life = n; },
+    delta:     +1,
+    min:       0,
+    max:       lifeMax,
+    logType:   "life_change",
+  }));
 
-  // Mana
-  on("btn-mana-cur-dec", "click", () => changeValue("manaCurrent", -1));
-  on("btn-mana-cur-inc", "click", () => changeValue("manaCurrent",  1));
-  on("btn-mana-max-dec", "click", () => changeValue("manaMax", -1));
-  on("btn-mana-max-inc", "click", () => changeValue("manaMax",  1));
+  // Mana current — uncapped above (can exceed max via special effects)
+  on("btn-mana-cur-dec", "click", () => adjustValue({
+    getValue:  () => state.manaCurrent,
+    setValue:  (n) => { state.manaCurrent = n; },
+    delta:     -1,
+    min:       0,
+    logType:   "mana_cur_change",
+  }));
+  on("btn-mana-cur-inc", "click", () => adjustValue({
+    getValue:  () => state.manaCurrent,
+    setValue:  (n) => { state.manaCurrent = n; },
+    delta:     +1,
+    min:       0,
+    logType:   "mana_cur_change",
+  }));
+
+  // Mana max — clamped between 0 and 20 (max sites on the board)
+  // Incrementing max also increments current (placing a site gives mana immediately)
+  on("btn-mana-max-dec", "click", () => adjustValue({
+    getValue:  () => state.manaMax,
+    setValue:  (n) => { state.manaMax = n; },
+    delta:     -1,
+    min:       0,
+    max:       20,
+    logType:   "mana_max_change",
+  }));
+  on("btn-mana-max-inc", "click", () => {
+    adjustValue({
+      getValue:  () => state.manaMax,
+      setValue:  (n) => { state.manaMax = n; },
+      delta:     +1,
+      min:       0,
+      max:       20,
+      logType:   "mana_max_change",
+    });
+    // Also give 1 current mana immediately — placing a site makes it usable at once
+    adjustValue({
+      getValue:  () => state.manaCurrent,
+      setValue:  (n) => { state.manaCurrent = n; },
+      delta:     +1,
+      min:       0,
+      logType:   "mana_cur_change",
+    });
+  });
 
   // Thresholds — delegated from the threshold section
   const thrSection = document.getElementById("section-thresholds");
@@ -437,7 +555,17 @@ function attachListeners() {
     thrSection.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-threshold]");
       if (!btn) return;
-      changeThreshold(btn.dataset.threshold, parseInt(btn.dataset.delta, 10));
+      const element = btn.dataset.threshold;
+      const delta   = parseInt(btn.dataset.delta, 10);
+      adjustValue({
+        getValue:  () => state.thresholds[element] ?? 0,
+        setValue:  (n) => { state.thresholds[element] = n; },
+        delta,
+        min:       0,
+        max:       20,
+        logType:   "threshold_change",
+        logDetail: { element },
+      });
     });
   }
 
@@ -514,6 +642,21 @@ function pad(n) {
 }
 
 /**
+ * Renders a number into a fixed-width element.
+ * Values 0-9 display as a single digit, right-aligned within
+ * the reserved two-digit space — no leading zero, no layout shift.
+ * Values 10+ display normally.
+ * @param {string} id    — element id to render into
+ * @param {number} value — the numeric value to display
+ */
+function renderPaddedValue(id, value) {
+  const node = el(id);
+  if (!node) return;
+  const n = Math.max(0, value ?? 0);
+  node.textContent = String(n);
+}
+
+/**
  * Capitalises the first letter of a string.
  * @param {string} str
  * @returns {string}
@@ -527,7 +670,7 @@ function capitalise(str) {
 //  INIT
 //  Called by app.js after the DOM is ready.
 // ============================================================
-function initGame() {
+function _initGame() {
   loadState();
   render();
 
@@ -547,13 +690,17 @@ function initGame() {
 
 
 // ============================================================
-//  SELF-INIT
-//  game.js initialises itself on DOMContentLoaded so load
-//  order relative to app.js does not matter.
+//  PUBLIC INIT
+//  Called by app.js in dependency order.
 // ============================================================
-document.addEventListener("DOMContentLoaded", () => {
-  initGame();
-});
+function initGame() {
+  _initGame();
+
+  // Restore timer visibility if a game was already in progress
+  const active = state?.phase === PHASE.YOUR_TURN || state?.phase === PHASE.THEIR_TURN;
+  window.ResTracker?.setTimerVisible?.(active);
+  window.ResTracker?.renderTimer?.();
+}
 
 // Also expose on public API for external access if needed
 if (typeof window !== "undefined") {
