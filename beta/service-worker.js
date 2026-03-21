@@ -16,7 +16,7 @@
 //  Bump CACHE_VERSION whenever you deploy changes to force
 //  existing installs to fetch fresh assets.
 // ============================================================
-const CACHE_VERSION  = "v47";
+const CACHE_VERSION  = "v48";
 const CACHE_NAME     = `restracker-${CACHE_VERSION}`;
 
 

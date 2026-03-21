@@ -139,7 +139,7 @@ function getDuration() {
     const raw = localStorage.getItem("restracker-timer-state");
     if (!raw) return "0:00";
     const t       = JSON.parse(raw);
-    const total   = (t.yourElapsed ?? 0) + (t.oppElapsed ?? 0);
+    const total   = Math.floor((t.yourElapsed ?? 0) + (t.oppElapsed ?? 0));
     const m       = Math.floor(total / 60);
     const s       = total % 60;
     return `${m}:${String(s).padStart(2, "0")}`;
