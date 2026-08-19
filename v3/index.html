@@ -97,8 +97,13 @@
   }
   .row-label .name{ display:flex; align-items:center; gap:6px; }
   .row-label .name .ic{ font-size:.95rem; }
+  #manaMaxLabel{
+    cursor:pointer; touch-action:none; padding:2px 4px 2px 0; margin:-2px 0 -2px -0px;
+    border-bottom:1px dashed rgba(61,143,214,0.35); border-radius:2px;
+  }
   .row-label .val{ font-family:'Cinzel',serif; font-size:1rem; color:var(--text); letter-spacing:0; }
   .row-label .val small{ color:var(--text-dim); font-size:.7rem; }
+  .row-label .val.boosted{ color:var(--gold-bright); text-shadow:0 0 8px rgba(232,199,102,0.5); }
 
   /* segmented bars */
   .bar-wrap{ flex:1 1 auto; min-height:0; display:flex; align-items:stretch; touch-action:none; cursor:pointer; position:relative; }
@@ -277,7 +282,7 @@
     <div class="card panel-manasites" id="manaSitesCard">
       <div class="mana-block">
         <div class="row-label">
-          <div class="name"><span class="ic" style="color:var(--mana)">&#128167;</span> MANA</div>
+          <div class="name" id="manaMaxLabel"><span class="ic" style="color:var(--mana)">&#128167;</span> MANA</div>
           <div class="val" id="manaVal">6 <small>/ 8</small></div>
         </div>
         <div class="bar-wrap" id="manaBar">
@@ -375,6 +380,7 @@
 
   var LIFE_MAX = 20;
   var THRESH_SLIDER_MAX = 12;
+  var MANA_OVERFLOW_BUFFER = 3; // headroom for one-turn-only bonus mana (e.g. a conditional Site ability)
 
   var state = {
     life: 17,
@@ -573,7 +579,9 @@
     for(var i=0;i<state.manaMax;i++){
       children[i].classList.toggle('on', i < state.manaCurrent);
     }
-    document.getElementById('manaVal').innerHTML = state.manaCurrent + ' <small>/ '+state.manaMax+'</small>';
+    var manaValEl = document.getElementById('manaVal');
+    manaValEl.innerHTML = state.manaCurrent + ' <small>/ '+state.manaMax+'</small>';
+    manaValEl.classList.toggle('boosted', state.manaCurrent > state.manaMax);
   }
 
   function renderSites(){
@@ -710,13 +718,32 @@
 
   /* ---------- MANA ---------- */
   attachHoldTap(document.getElementById('manaBar'), {
-    label:'MANA', color: COLORS.mana, min:0, max: function(){ return state.manaMax; },
+    label:'MANA', color: COLORS.mana, min:0, max: function(){ return state.manaMax + MANA_OVERFLOW_BUFFER; },
     getValue: function(){ return state.manaCurrent; },
     setValue: function(v){ state.manaCurrent = v; },
     onTap: function(){
       if(state.manaCurrent <= 0){ fail(document.getElementById('manaSitesCard')); return; }
       pushHistory();
-      state.manaCurrent = clamp(state.manaCurrent - 1, 0, state.manaMax);
+      state.manaCurrent = clamp(state.manaCurrent - 1, 0, state.manaMax + MANA_OVERFLOW_BUFFER);
+      render();
+      ok(document.getElementById('manaSitesCard'));
+    }
+  });
+
+  // MANA label — separate control for permanent non-Site mana sources (e.g. a Relic like Ruby Core).
+  // Tap: +1 to Max (and Current, mirroring "a new permanent source just entered play"), Sites untouched.
+  // Hold: correct Max directly (e.g. that source left play) — Current is clamped down if it now exceeds Max.
+  attachHoldTap(document.getElementById('manaMaxLabel'), {
+    label:'MAX MANA', color: COLORS.mana, min:0, max:40,
+    getValue: function(){ return state.manaMax; },
+    setValue: function(v){
+      state.manaMax = v;
+      state.manaCurrent = clamp(state.manaCurrent, 0, state.manaMax + MANA_OVERFLOW_BUFFER);
+    },
+    onTap: function(){
+      pushHistory();
+      state.manaMax += 1;
+      state.manaCurrent += 1;
       render();
       ok(document.getElementById('manaSitesCard'));
     }
