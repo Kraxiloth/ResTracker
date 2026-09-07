@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <title>ResTracker</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="app-version" content="2026-09-07.2">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -97,13 +101,16 @@
   }
   .row-label .name{ display:flex; align-items:center; gap:6px; }
   .row-label .name .ic{ font-size:.95rem; }
-  #manaMaxLabel{
-    cursor:pointer; touch-action:none; padding:2px 4px 2px 0; margin:-2px 0 -2px -0px;
-    border-bottom:1px dashed rgba(61,143,214,0.35); border-radius:2px;
-  }
   .row-label .val{ font-family:'Cinzel',serif; font-size:1rem; color:var(--text); letter-spacing:0; }
   .row-label .val small{ color:var(--text-dim); font-size:.7rem; }
   .row-label .val.boosted{ color:var(--gold-bright); text-shadow:0 0 8px rgba(232,199,102,0.5); }
+
+  .maxmana-block{
+    flex:0 0 64px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border-left:1px solid var(--line); padding-left:8px; text-align:center; touch-action:none; cursor:pointer;
+  }
+  .maxmana-block .ic{ font-size:1.3rem; color:var(--mana); }
+  .maxmana-block .cap{ font-size:.6rem; letter-spacing:1px; color:var(--text-dim); margin-top:3px; line-height:1.25; }
 
   /* segmented bars */
   .bar-wrap{ flex:1 1 auto; min-height:0; display:flex; align-items:stretch; touch-action:none; cursor:pointer; position:relative; }
@@ -120,18 +127,12 @@
   }
 
   .mana-block{ flex:1 1 auto; display:flex; flex-direction:column; min-width:0; }
-  .sites-block{
-    flex:0 0 92px; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    border-left:1px solid var(--line); padding-left:8px; text-align:center; touch-action:none; cursor:pointer;
-  }
-  .sites-block .ic{ font-size:1.1rem; color:var(--site); }
-  .sites-block .num{ font-family:'Cinzel',serif; font-size:1.7rem; font-weight:700; color:var(--site); line-height:1.05; }
-  .sites-block .cap{ font-size:.62rem; letter-spacing:1px; color:var(--text-dim); margin-top:1px; }
 
   /* ---------- THRESHOLD CROSS ---------- */
   .cross-wrap{ flex:1 1 auto; min-height:0; position:relative; display:flex; align-items:center; justify-content:center; }
   .cross-wrap svg{ width:min(100%,100%); height:100%; max-height:100%; touch-action:none; }
-  .wedge{ fill-opacity:0.07; transition:fill-opacity .15s; cursor:pointer; }
+  #crossSvg *{ pointer-events:none; }
+  #crossSvg .wedge{ fill-opacity:0.07; transition:fill-opacity .15s; cursor:pointer; pointer-events:auto; }
   .wedge:active{ fill-opacity:0.20; }
   .dot{ transition:opacity .15s, transform .15s; }
   .ring-empty{ fill:none; stroke:rgba(255,255,255,0.10); stroke-width:2; }
@@ -223,10 +224,32 @@
     text-align:center;
   }
   .slider-card .lbl{ font-size:.72rem; letter-spacing:2px; color:var(--text-dim); font-weight:700; }
-  .slider-card .big{ font-family:'Cinzel',serif; font-size:2.6rem; font-weight:700; margin:6px 0 14px; }
-  .slider-card .hint{ font-size:.66rem; color:var(--text-dim); margin-top:10px; letter-spacing:.5px; }
-  .slider-track-outer{ height:8px; border-radius:4px; background:rgba(255,255,255,0.08); position:relative; }
-  .slider-track-fill{ position:absolute; left:0; top:0; bottom:0; border-radius:4px; }
+
+  .wheel-wrap{
+    position:relative; width:210px; height:210px; margin:10px auto 22px;
+    touch-action:none; cursor:pointer;
+  }
+  .wheel-wrap svg{ width:100%; height:100%; display:block; }
+  .wheel-center{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; pointer-events:none;
+  }
+  .ov-value-main{ font-family:'Cinzel',serif; font-weight:700; font-size:2.6rem; line-height:1; }
+  .ov-value-delta{
+    font-family:'Inter',sans-serif; font-weight:700; font-size:.9rem;
+    margin-top:3px; min-height:1.1em; letter-spacing:.5px;
+  }
+  .ov-value-delta.pos{ color:#8fe0a0; }
+  .ov-value-delta.neg{ color:#e05555; }
+
+  .ov-actions{ display:flex; gap:10px; }
+  .ov-btn{
+    flex:1 1 0; padding:11px; border-radius:10px; font-family:'Inter',sans-serif;
+    font-weight:600; font-size:.85rem; cursor:pointer; border:1px solid var(--line-strong);
+    background:var(--panel);
+  }
+  .ov-cancel{ color:var(--text-dim); }
+  .ov-confirm{ background:rgba(143,224,160,0.15); border-color:rgba(143,224,160,0.4); color:#8fe0a0; }
 
   .undo-badge{
     position:absolute; top:6px; right:8px; font-size:.6rem; color:var(--text-dim);
@@ -261,7 +284,7 @@
 
   <header>
     <h1><span class="flourish">&#9670;</span> ResTracker <span class="flourish">&#9670;</span></h1>
-    <div class="version">v3 &middot; prototype</div>
+    <div class="version" id="versionTag">v3 &middot; prototype</div>
   </header>
 
   <div id="content">
@@ -278,21 +301,20 @@
       </div>
     </div>
 
-    <!-- MANA + SITES -->
-    <div class="card panel-manasites" id="manaSitesCard">
+    <!-- MANA -->
+    <div class="card panel-manasites" id="manaCard">
       <div class="mana-block">
         <div class="row-label">
-          <div class="name" id="manaMaxLabel"><span class="ic" style="color:var(--mana)">&#128167;</span> MANA</div>
+          <div class="name"><span class="ic" style="color:var(--mana)">&#128167;</span> MANA</div>
           <div class="val" id="manaVal">6 <small>/ 8</small></div>
         </div>
         <div class="bar-wrap" id="manaBar">
           <div class="bar-track" id="manaSegs"></div>
         </div>
       </div>
-      <div class="sites-block" id="sitesBlock">
-        <span class="ic">&#9968;</span>
-        <div class="num" id="sitesVal">8</div>
-        <div class="cap">SITES</div>
+      <div class="maxmana-block" id="manaMaxBtn">
+        <span class="ic">&#10133;</span>
+        <div class="cap">MAX<br>MANA</div>
       </div>
     </div>
 
@@ -311,7 +333,7 @@
       </div>
       <div class="btn btn-newturn" id="newTurnBtn">
         <div class="t">&#8635; NEW TURN</div>
-        <div class="s">Refresh mana from sites</div>
+        <div class="s">Refresh mana to max</div>
       </div>
     </div>
 
@@ -326,11 +348,17 @@
   <div id="overlay">
     <div class="slider-card">
       <div class="lbl" id="ovLabel">LIFE</div>
-      <div class="big" id="ovValue">17</div>
-      <div class="slider-track-outer">
-        <div class="slider-track-fill" id="ovFill"></div>
+      <div class="wheel-wrap" id="wheelWrap">
+        <svg id="wheelSvg" viewBox="0 0 220 220"></svg>
+        <div class="wheel-center">
+          <div class="ov-value-main" id="ovValue">17</div>
+          <div class="ov-value-delta" id="ovDelta"></div>
+        </div>
       </div>
-      <div class="hint">Drag left / right &middot; release to apply</div>
+      <div class="ov-actions">
+        <button class="ov-btn ov-cancel" id="ovCancelBtn">Cancel</button>
+        <button class="ov-btn ov-confirm" id="ovConfirmBtn">Confirm</button>
+      </div>
     </div>
   </div>
 
@@ -366,7 +394,7 @@
 
         <div class="btn btn-reset" id="resetBtn">
           <div class="t">&#9851; RESET TRACKER</div>
-          <div class="s" id="resetHint">Life 20 &middot; Mana/Sites/Threshold 0</div>
+          <div class="s" id="resetHint">Life 20 &middot; Mana/Threshold 0</div>
         </div>
       </div>
       <div class="hint">Tap outside to close</div>
@@ -380,14 +408,13 @@
 
   var LIFE_MAX = 20;
   var THRESH_SLIDER_MAX = 12;
-  var MANA_OVERFLOW_BUFFER = 3; // headroom for one-turn-only bonus mana (e.g. a conditional Site ability)
+  var MANA_OVERFLOW_BUFFER = 40; // generous headroom above max — not meant to be a real limit in practice
 
   var state = {
-    life: 17,
-    manaCurrent: 6,
-    manaMax: 8,
-    sites: 8,
-    threshold: { air:2, fire:6, earth:3, water:1 }
+    life: 20,
+    manaCurrent: 0,
+    manaMax: 0,
+    threshold: { air:0, fire:0, earth:0, water:0 }
   };
 
   var history = [];
@@ -428,19 +455,10 @@
   var TRI_UP = 'M13 2 L24 21 L2 21 Z';
   var TRI_DOWN = 'M13 22 L24 3 L2 3 Z';
 
-  function glyphGroup(cx, cy, scale, color, up, dim){
-    var tri = up ? TRI_UP : TRI_DOWN;
-    var barY = up ? 14 : 10;
-    var op = dim ? 0.45 : 1;
-    return '<g transform="translate('+cx.toFixed(1)+','+cy.toFixed(1)+') scale('+scale+') translate(-13,-12)" opacity="'+op+'">' +
-      '<path d="'+tri+'" fill="none" stroke="'+color+'" stroke-width="2.4" stroke-linejoin="round"/>' +
-      '<rect x="1" y="'+(barY-1.3).toFixed(1)+'" width="24" height="3" fill="'+color+'" />' +
-      '</g>';
-  }
-
   /* ---------- THRESHOLD CROSS (SVG) ---------- */
   var CX=160, CY=160, WEDGE_R=150;
-  var DOT_R=[38,64,90,114,138];
+  var DOT_R=[38,68,98,128];
+  var BG_GLYPH_R=88;
   var AXES = {
     air:   { angle:0,   color:COLORS.air   },
     fire:  { angle:90,  color:COLORS.fire  },
@@ -496,6 +514,16 @@
     svgHTML += '<path class="wedge" data-el="'+key+'" fill="'+AXES[key].color+'" d="'+wedgePath(a-45, a+45)+'"></path>';
   });
 
+  // dimmed background glyph per quadrant — pure decoration, marks which region belongs to which element
+  Object.keys(AXES).forEach(function(key){
+    var up = (key === 'air' || key === 'fire');
+    var pbg = pt(BG_GLYPH_R, AXES[key].angle);
+    svgHTML += '<g transform="translate('+pbg.x.toFixed(1)+','+pbg.y.toFixed(1)+') scale(2.1) translate(-13,-12)" opacity="0.09" pointer-events="none">' +
+      '<path d="'+(up ? TRI_UP : TRI_DOWN)+'" fill="none" stroke="'+AXES[key].color+'" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<rect x="1" y="'+((up?14:10)-1.3).toFixed(1)+'" width="24" height="3" fill="'+AXES[key].color+'"/>' +
+      '</g>';
+  });
+
   // center emblem
   svgHTML += '<circle cx="'+CX+'" cy="'+CY+'" r="26" fill="#1d1928" stroke="var(--gold)" stroke-width="1.5" />';
   svgHTML += '<path d="M'+CX+' '+(CY-16)+' L'+(CX+5)+' '+(CY-5)+' L'+(CX+16)+' '+CY+' L'+(CX+5)+' '+(CY+5)+' L'+CX+' '+(CY+16)+' L'+(CX-5)+' '+(CY+5)+' L'+(CX-16)+' '+CY+' L'+(CX-5)+' '+(CY-5)+' Z" fill="none" stroke="var(--gold)" stroke-width="1.2" opacity="0.8"/>';
@@ -510,40 +538,30 @@
   function renderThreshold(){
     Object.keys(AXES).forEach(function(key){
       var val = state.threshold[key];
+      var visual = Math.min(val,4);
       var angle = AXES[key].angle;
       var color = AXES[key].color;
-      var up = (key === 'air' || key === 'fire');
       var g = document.getElementById('dots-'+key);
       var html = '';
 
-      if(val === 0){
-        // slot 0: faded glyph marker · slots 1-4: empty pips
-        var p0 = pt(DOT_R[0], angle);
-        html += '<circle class="dot ring-empty" cx="'+p0.x.toFixed(1)+'" cy="'+p0.y.toFixed(1)+'" r="11" stroke="'+color+'" stroke-opacity="0.35"/>';
-        html += glyphGroup(p0.x, p0.y, 0.42, color, up, true);
-        for(var e=1;e<5;e++){
+      if(visual === 0){
+        for(var e=0;e<4;e++){
           var pe0 = pt(DOT_R[e], angle);
           html += '<circle class="dot ring-empty" cx="'+pe0.x.toFixed(1)+'" cy="'+pe0.y.toFixed(1)+'" r="9"/>';
         }
       } else {
-        var filled = Math.min(val-1, 3);
-        var glyphSlot = filled;
-        var numberSlot = filled+1;
-
-        for(var i=0;i<filled;i++){
+        for(var i=0;i<visual;i++){
           var p = pt(DOT_R[i], angle);
-          html += '<circle class="dot" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="9" fill="'+color+'" opacity="0.85" style="filter:drop-shadow(0 0 3px '+color+'88)"/>';
+          var isLatest = (i === visual-1);
+          if(isLatest){
+            var r = val >= 10 ? 16 : 14;
+            html += '<circle class="dot" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="'+r+'" fill="'+color+'" style="filter:drop-shadow(0 0 5px '+color+'aa)"/>';
+            html += '<text x="'+p.x.toFixed(1)+'" y="'+(p.y+4.5).toFixed(1)+'" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" font-size="'+(val>=10?13:15)+'" fill="'+VOID_HEX+'">'+val+'</text>';
+          } else {
+            html += '<circle class="dot" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="8" fill="'+color+'" opacity="0.8"/>';
+          }
         }
-
-        var pg = pt(DOT_R[glyphSlot], angle);
-        html += '<circle class="dot" cx="'+pg.x.toFixed(1)+'" cy="'+pg.y.toFixed(1)+'" r="14" fill="'+color+'" style="filter:drop-shadow(0 0 5px '+color+'aa)"/>';
-        html += glyphGroup(pg.x, pg.y, 0.48, VOID_HEX, up, false);
-
-        var pn = pt(DOT_R[numberSlot], angle);
-        html += '<circle class="dot" cx="'+pn.x.toFixed(1)+'" cy="'+pn.y.toFixed(1)+'" r="15" fill="'+VOID_HEX+'" stroke="'+color+'" stroke-width="2" style="filter:drop-shadow(0 0 4px '+color+'88)"/>';
-        html += '<text x="'+pn.x.toFixed(1)+'" y="'+(pn.y+5.5).toFixed(1)+'" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" font-size="15" fill="'+color+'">'+val+'</text>';
-
-        for(var j=numberSlot+1;j<5;j++){
+        for(var j=visual;j<4;j++){
           var pe = pt(DOT_R[j], angle);
           html += '<circle class="dot ring-empty" cx="'+pe.x.toFixed(1)+'" cy="'+pe.y.toFixed(1)+'" r="9"/>';
         }
@@ -553,7 +571,7 @@
     });
   }
 
-  /* ---------- RENDER: LIFE / MANA / SITES ---------- */
+  /* ---------- RENDER: LIFE / MANA ---------- */
   function buildSegs(container, count){
     var html = '';
     for(var i=0;i<count;i++){ html += '<div class="seg"></div>'; }
@@ -584,14 +602,9 @@
     manaValEl.classList.toggle('boosted', state.manaCurrent > state.manaMax);
   }
 
-  function renderSites(){
-    document.getElementById('sitesVal').textContent = state.sites;
-  }
-
   function render(){
     renderLife();
     renderMana();
-    renderSites();
     renderThreshold();
     schedulePersist();
   }
@@ -623,72 +636,248 @@
     } catch(e){ /* nothing saved yet, or storage unavailable — start fresh */ }
   }
 
-  /* ---------- OVERLAY SLIDER ---------- */
+  /* ---------- OVERLAY WHEEL ---------- */
   var overlay = document.getElementById('overlay');
   var ovLabel = document.getElementById('ovLabel');
   var ovValue = document.getElementById('ovValue');
-  var ovFill = document.getElementById('ovFill');
+  var ovDelta = document.getElementById('ovDelta');
+  var wheelWrap = document.getElementById('wheelWrap');
+  var wheelSvg = document.getElementById('wheelSvg');
+  var ovCancelBtn = document.getElementById('ovCancelBtn');
+  var ovConfirmBtn = document.getElementById('ovConfirmBtn');
 
-  function showOverlay(label, val, min, max, color){
-    ovLabel.textContent = label;
-    ovLabel.style.color = color;
+  var activeCfg = null;
+  var activeBaseVal = 0;
+  var activeMin = 0;
+  var activeHardMax = 0;   // absolute ceiling (e.g. manaMax + overflow buffer)
+  var activeDialMax = 0;   // value at which the dial completes exactly one revolution (360°)
+  var dialSegments = 1;    // number of notches around the ring
+  var dialUnitsPerNotch = 1;
+  var degreesPerUnit = 360; // rotation needed per unit — same rate is used past the dial for overflow
+  var overflowDegSpan = 0; // extra degrees available beyond 360° for pushing past dialMax
+  var totalDegSpan = 360;  // full explorable range: 0 (=min) .. totalDegSpan (=hardMax)
+
+  var WHEEL_CX = 110, WHEEL_CY = 110, WHEEL_R = 92;
+  var WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_R;
+
+  var wheelMarkerEl = null;
+  var wheelFillEl = null;
+  var wheelDragging = false;
+  var wheelLastAngle = 0;
+  var virtualAngle = 0; // continuous, unwrapped — 0 at min, 360 at dialMax, up to totalDegSpan at hardMax
+
+  function wheelPt(r, angleDeg){
+    var rad = angleDeg * Math.PI/180;
+    return { x: WHEEL_CX + r*Math.sin(rad), y: WHEEL_CY - r*Math.cos(rad) };
+  }
+
+  function buildWheelSVG(color, segments){
+    var ticks = '';
+    var tickCount = Math.min(segments, 48); // avoid an unreadably dense ring for very large ranges
+    for(var i=0; i<tickCount; i++){
+      var deg = (360/tickCount) * i;
+      var p1 = wheelPt(76, deg);
+      var p2 = wheelPt(88, deg);
+      ticks += '<line x1="'+p1.x.toFixed(1)+'" y1="'+p1.y.toFixed(1)+'" x2="'+p2.x.toFixed(1)+'" y2="'+p2.y.toFixed(1)+'" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>';
+    }
+    return '<circle cx="'+WHEEL_CX+'" cy="'+WHEEL_CY+'" r="'+WHEEL_R+'" fill="none" stroke="'+color+'" stroke-opacity="0.14" stroke-width="16"/>' +
+      '<circle id="wheelFill" cx="'+WHEEL_CX+'" cy="'+WHEEL_CY+'" r="'+WHEEL_R+'" fill="none" stroke="'+color+'" stroke-width="16" ' +
+        'stroke-linecap="round" stroke-dasharray="0 '+WHEEL_CIRCUMFERENCE.toFixed(1)+'" ' +
+        'transform="rotate(-90 '+WHEEL_CX+' '+WHEEL_CY+')" style="filter:drop-shadow(0 0 5px '+color+'99)"/>' +
+      ticks +
+      '<circle id="wheelMarker" cx="'+WHEEL_CX+'" cy="'+(WHEEL_CY-WHEEL_R)+'" r="9" fill="'+color+'" opacity="0.55"/>';
+  }
+
+  function positionMarker(angleDeg){
+    if(!wheelMarkerEl) return;
+    var p = wheelPt(WHEEL_R, angleDeg);
+    wheelMarkerEl.setAttribute('cx', p.x.toFixed(1));
+    wheelMarkerEl.setAttribute('cy', p.y.toFixed(1));
+  }
+
+  function updateFillArc(value){
+    if(!wheelFillEl) return;
+    var span = activeDialMax - activeMin;
+    var frac = span > 0 ? clamp((Math.min(value, activeDialMax) - activeMin) / span, 0, 1) : (value > activeMin ? 1 : 0);
+    var dash = frac * WHEEL_CIRCUMFERENCE;
+    wheelFillEl.setAttribute('stroke-dasharray', dash.toFixed(1) + ' ' + WHEEL_CIRCUMFERENCE.toFixed(1));
+  }
+
+  // Maps a continuous virtual angle (can exceed 360°) to a value, snapping to notches
+  // within the dial's own range and stepping continuously once past it (overflow).
+  function valueFromVirtualAngle(va){
+    if(va <= 360){
+      var idx = Math.round((va/360) * dialSegments);
+      idx = clamp(idx, 0, dialSegments);
+      return Math.round(activeMin + idx*dialUnitsPerNotch);
+    }
+    var extra = va - 360;
+    return clamp(Math.round(activeDialMax + extra/degreesPerUnit), activeDialMax, activeHardMax);
+  }
+
+  function updateValueDisplay(){
+    var val = activeCfg.getValue();
     ovValue.textContent = val;
-    ovValue.style.color = color;
-    ovFill.style.background = color;
-    var pct = max>min ? ((val-min)/(max-min))*100 : 0;
-    ovFill.style.width = clamp(pct,0,100) + '%';
+    var delta = val - activeBaseVal;
+    if(delta === 0){
+      ovDelta.textContent = '';
+      ovDelta.classList.remove('pos','neg');
+    } else if(delta > 0){
+      ovDelta.textContent = '(+'+delta+')';
+      ovDelta.classList.add('pos');
+      ovDelta.classList.remove('neg');
+    } else {
+      ovDelta.textContent = '('+delta+')';
+      ovDelta.classList.add('neg');
+      ovDelta.classList.remove('pos');
+    }
+  }
+
+  function applyVirtualAngle(){
+    var prevVal = activeCfg.getValue();
+    var newVal = valueFromVirtualAngle(virtualAngle);
+    positionMarker(virtualAngle % 360);
+    if(newVal !== prevVal){
+      activeCfg.setValue(newVal);
+      render();
+      updateValueDisplay();
+      updateFillArc(newVal);
+    }
+  }
+
+  function angleFromCenter(clientX, clientY){
+    var rect = wheelWrap.getBoundingClientRect();
+    var cx = rect.left + rect.width/2;
+    var cy = rect.top + rect.height/2;
+    var dx = clientX - cx, dy = clientY - cy;
+    var deg = Math.atan2(dx, -dy) * 180/Math.PI; // 0 = up (12 o'clock), clockwise positive
+    if(deg < 0) deg += 360;
+    return deg;
+  }
+
+  function normalizeDelta(delta){
+    while(delta > 180) delta -= 360;
+    while(delta < -180) delta += 360;
+    return delta;
+  }
+
+  function openSlider(cfg, baseVal, hardMax, dialMax){
+    activeCfg = cfg;
+    activeBaseVal = baseVal;
+    activeMin = cfg.min;
+    activeHardMax = hardMax;
+    activeDialMax = Math.max(dialMax, activeMin + 1); // guard against a degenerate 0-width dial
+
+    var span = activeDialMax - activeMin;
+    dialSegments = Math.max(1, span); // one notch per unit — guarantees every integer is reachable, no rounding skips
+    dialUnitsPerNotch = span / dialSegments; // always exactly 1
+    degreesPerUnit = 360 / dialSegments; // overflow continues at this same rate — no jarring switch in sensitivity
+    overflowDegSpan = Math.max(0, activeHardMax - activeDialMax) * degreesPerUnit;
+    totalDegSpan = 360 + overflowDegSpan;
+
+    ovLabel.textContent = cfg.label;
+    ovLabel.style.color = cfg.color;
+    ovValue.style.color = cfg.color;
+    wheelSvg.innerHTML = buildWheelSVG(cfg.color, dialSegments);
+    wheelMarkerEl = document.getElementById('wheelMarker');
+    wheelFillEl = document.getElementById('wheelFill');
+
+    // Cosmetic starting position only — the first actual touch always sets virtualAngle fresh (see pointerdown).
+    virtualAngle = clamp(((Math.min(baseVal, activeDialMax) - activeMin) / span) * 360, 0, totalDegSpan);
+    positionMarker(virtualAngle % 360);
+    updateFillArc(baseVal);
+    updateValueDisplay();
     overlay.classList.add('show');
   }
-  function updateOverlay(val, min, max){
-    ovValue.textContent = val;
-    var pct = max>min ? ((val-min)/(max-min))*100 : 0;
-    ovFill.style.width = clamp(pct,0,100) + '%';
+
+  function closeSlider(){
+    overlay.classList.remove('show');
+    activeCfg = null;
+    wheelDragging = false;
   }
-  function hideOverlay(){ overlay.classList.remove('show'); }
+
+  wheelWrap.addEventListener('pointerdown', function(e){
+    if(!activeCfg) return;
+    wheelDragging = true;
+    var touchAngle = angleFromCenter(e.clientX, e.clientY);
+    wheelLastAngle = touchAngle;
+    // Tapping anywhere on the ring jumps straight to that position — direct manipulation,
+    // not a relative nudge from wherever the value happened to be.
+    virtualAngle = clamp(touchAngle, 0, totalDegSpan);
+    applyVirtualAngle();
+    wheelWrap.setPointerCapture && wheelWrap.setPointerCapture(e.pointerId);
+  });
+
+  wheelWrap.addEventListener('pointermove', function(e){
+    if(!wheelDragging || !activeCfg) return;
+    var angle = angleFromCenter(e.clientX, e.clientY);
+    var delta = normalizeDelta(angle - wheelLastAngle);
+    wheelLastAngle = angle;
+    virtualAngle = clamp(virtualAngle + delta, 0, totalDegSpan);
+    applyVirtualAngle();
+  });
+
+  wheelWrap.addEventListener('pointerup', function(){ wheelDragging = false; });
+  wheelWrap.addEventListener('pointercancel', function(){ wheelDragging = false; });
+
+  ovConfirmBtn.addEventListener('click', function(){
+    closeSlider();
+  });
+
+  ovCancelBtn.addEventListener('click', function(){
+    if(activeCfg){
+      activeCfg.setValue(activeBaseVal);
+      render();
+    }
+    closeSlider();
+  });
+
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) closeSlider(); // tapping the backdrop confirms, same as the Confirm button
+  });
 
   /* ---------- HOLD / TAP ENGINE ---------- */
+  // Press-and-hold only ARMS the slider now — the user then lifts their finger and
+  // adjusts the on-screen slider freely (no cramped same-touch dragging near screen edges),
+  // confirming or cancelling explicitly when done.
   function attachHoldTap(el, cfg){
     var pressTimer = null;
-    var holding = false;
+    var armed = false;
     var startX = 0, startY = 0;
-    var baseVal = 0;
-    var curMax = 0;
     var HOLD_MS = 480;
-    var SENS = cfg.sensitivity || 16;
 
     function resolveMax(){ return (typeof cfg.max === 'function') ? cfg.max() : cfg.max; }
+    function resolveDialMax(curMax){
+      if(cfg.dialMax === undefined) return curMax;
+      return (typeof cfg.dialMax === 'function') ? cfg.dialMax() : cfg.dialMax;
+    }
 
     function onDown(e){
       e.preventDefault();
       startX = e.clientX; startY = e.clientY;
-      baseVal = cfg.getValue();
-      curMax = resolveMax();
+      var baseVal = cfg.getValue();
+      var curMax = resolveMax();
+      var curDialMax = resolveDialMax(curMax);
       pressTimer = setTimeout(function(){
-        holding = true;
+        armed = true;
         pushHistory();
-        showOverlay(cfg.label, baseVal, cfg.min, curMax, cfg.color);
+        openSlider(cfg, baseVal, curMax, curDialMax);
       }, HOLD_MS);
-      el.setPointerCapture && el.setPointerCapture(e.pointerId);
     }
     function onMove(e){
-      if(holding){
-        var dx = e.clientX - startX;
-        var delta = Math.round(dx / SENS);
-        var val = clamp(baseVal + delta, cfg.min, curMax);
-        cfg.setValue(val);
-        render();
-        updateOverlay(val, cfg.min, curMax);
-      } else if(pressTimer){
+      if(!armed && pressTimer){
         if(Math.abs(e.clientX-startX) > 12 || Math.abs(e.clientY-startY) > 12){
           clearTimeout(pressTimer); pressTimer = null;
         }
       }
+      // once armed, the overlay's own wheel handles all further interaction
     }
     function onUp(e){
-      if(holding){
-        holding = false;
-        hideOverlay();
-      } else if(pressTimer){
+      if(armed){
+        armed = false; // finger lifting off the source element no longer closes anything
+        return;
+      }
+      if(pressTimer){
         clearTimeout(pressTimer); pressTimer = null;
         cfg.onTap();
       }
@@ -698,7 +887,7 @@
     el.addEventListener('pointerup', onUp);
     el.addEventListener('pointercancel', function(){
       clearTimeout(pressTimer); pressTimer = null;
-      if(holding){ holding = false; hideOverlay(); }
+      armed = false;
     });
   }
 
@@ -716,50 +905,39 @@
     }
   });
 
-  /* ---------- MANA ---------- */
+  /* ---------- CURRENT MANA ---------- */
   attachHoldTap(document.getElementById('manaBar'), {
-    label:'MANA', color: COLORS.mana, min:0, max: function(){ return state.manaMax + MANA_OVERFLOW_BUFFER; },
+    label:'MANA', color: COLORS.mana, min:0,
+    dialMax: function(){ return state.manaMax; },
+    max: function(){ return state.manaMax + MANA_OVERFLOW_BUFFER; },
     getValue: function(){ return state.manaCurrent; },
     setValue: function(v){ state.manaCurrent = v; },
     onTap: function(){
-      if(state.manaCurrent <= 0){ fail(document.getElementById('manaSitesCard')); return; }
+      if(state.manaCurrent <= 0){ fail(document.getElementById('manaCard')); return; }
       pushHistory();
       state.manaCurrent = clamp(state.manaCurrent - 1, 0, state.manaMax + MANA_OVERFLOW_BUFFER);
       render();
-      ok(document.getElementById('manaSitesCard'));
+      ok(document.getElementById('manaCard'));
     }
   });
 
-  // MANA label — separate control for permanent non-Site mana sources (e.g. a Relic like Ruby Core).
-  // Tap: +1 to Max (and Current, mirroring "a new permanent source just entered play"), Sites untouched.
-  // Hold: correct Max directly (e.g. that source left play) — Current is clamped down if it now exceeds Max.
-  attachHoldTap(document.getElementById('manaMaxLabel'), {
+  // MAX MANA button — a dedicated control, separate from Sites, for anything that adds to your
+  // mana ceiling (Sites, Relics, Auras, whatever a card actually does).
+  // Tap: a discrete "a new mana source just entered play" action — bumps Max AND Current by 1,
+  // since that's the immediate in-game benefit.
+  // Hold (wheel): a bulk correction to Max only — Current is NEVER touched here. If a mana source
+  // leaves play mid-turn, whatever was already drawn from the bucket this turn stays drawn; the
+  // change only shows up once New Turn refills the bucket from the new (lower) Max.
+  attachHoldTap(document.getElementById('manaMaxBtn'), {
     label:'MAX MANA', color: COLORS.mana, min:0, max:40,
     getValue: function(){ return state.manaMax; },
-    setValue: function(v){
-      state.manaMax = v;
-      state.manaCurrent = clamp(state.manaCurrent, 0, state.manaMax + MANA_OVERFLOW_BUFFER);
-    },
+    setValue: function(v){ state.manaMax = v; },
     onTap: function(){
       pushHistory();
       state.manaMax += 1;
       state.manaCurrent += 1;
       render();
-      ok(document.getElementById('manaSitesCard'));
-    }
-  });
-  /* ---------- SITES ---------- */
-  attachHoldTap(document.getElementById('sitesBlock'), {
-    label:'SITES', color: COLORS.site, min:0, max:40,
-    getValue: function(){ return state.sites; },
-    setValue: function(v){ state.sites = v; },
-    onTap: function(){
-      pushHistory();
-      state.sites += 1;
-      state.manaMax += 1;
-      state.manaCurrent += 1;
-      render();
-      ok(document.getElementById('sitesBlock'));
+      ok(document.getElementById('manaMaxBtn'));
     }
   });
 
@@ -767,8 +945,7 @@
   Object.keys(AXES).forEach(function(key){
     var wedgeEl = svg.querySelector('.wedge[data-el="'+key+'"]');
     attachHoldTap(wedgeEl, {
-      label: key.toUpperCase(), color: AXES[key].color, min:0, max:THRESH_SLIDER_MAX,
-      sensitivity: 14,
+      label: key.toUpperCase(), color: AXES[key].color, min:0, dialMax:4, max:THRESH_SLIDER_MAX,
       getValue: function(){ return state.threshold[key]; },
       setValue: function(v){ state.threshold[key] = v; },
       onTap: function(){
@@ -799,7 +976,7 @@
   function disarmReset(){
     resetArmed = false;
     resetBtn.classList.remove('armed');
-    resetHint.textContent = 'Life 20 \u00b7 Mana/Sites/Threshold 0';
+    resetHint.textContent = 'Life 20 \u00b7 Mana/Threshold 0';
     clearTimeout(resetArmTimer);
   }
 
@@ -827,7 +1004,6 @@
       life: LIFE_MAX,
       manaCurrent: 0,
       manaMax: 0,
-      sites: 0,
       threshold: { air:0, fire:0, earth:0, water:0 }
     };
     render();
@@ -896,7 +1072,37 @@
     if(wakeLockEnabled) resetWakeLockTimer();
   });
 
+  /* ---------- VERSION CHECK / AUTO-RELOAD ---------- */
+  // Static hosting (GitHub Pages) + mobile browser caching means a plain page reopen can easily
+  // serve a stale cached copy. We embed a version marker and periodically re-fetch the live page
+  // (bypassing cache) to compare; a mismatch triggers a reload. Safe because state is persisted.
+  var APP_VERSION = document.querySelector('meta[name="app-version"]').content;
+  var VERSION_CHECK_INTERVAL = 2 * 60 * 1000; // 2 minutes
+
+  async function checkForUpdate(){
+    try{
+      var res = await fetch(location.pathname + location.search, { cache: 'no-store' });
+      var html = await res.text();
+      var match = html.match(/name="app-version"\s+content="([^"]+)"/);
+      if(!match) return;
+      var remoteVersion = match[1];
+      if(remoteVersion === APP_VERSION) return;
+
+      var lastReloadVersion = sessionStorage.getItem('resTrackerLastReloadVersion');
+      if(remoteVersion === lastReloadVersion) return; // already tried reloading for this version this session
+
+      sessionStorage.setItem('resTrackerLastReloadVersion', remoteVersion);
+      location.reload();
+    } catch(e){ /* offline or fetch blocked — just skip this check */ }
+  }
+
+  setInterval(checkForUpdate, VERSION_CHECK_INTERVAL);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible') checkForUpdate();
+  });
+
   /* ---------- INIT ---------- */
+  document.getElementById('versionTag').textContent = 'Build ' + APP_VERSION;
   await loadPersistedState();
   render();
   updateUndoBtn();
