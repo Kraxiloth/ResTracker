@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>ResTracker</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="app-version" content="2026-09-07.2">
+<meta name="app-version" content="2026-09-07.3">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -858,6 +858,7 @@
       var baseVal = cfg.getValue();
       var curMax = resolveMax();
       var curDialMax = resolveDialMax(curMax);
+      el.setPointerCapture && el.setPointerCapture(e.pointerId);
       pressTimer = setTimeout(function(){
         armed = true;
         pushHistory();
